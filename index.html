@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0a0a">
+<title>Protocole 12 — Carnet d'entraînement</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0a;
+  --bg-elev: #131313;
+  --bg-card: #181818;
+  --border: #262626;
+  --border-strong: #383838;
+  --text: #ededed;
+  --text-dim: #8a8a8a;
+  --text-faint: #555;
+  --accent: #c4ff3d;
+  --accent-dim: #9bcc2e;
+  --danger: #ff5252;
+  --warning: #ffb84d;
+  --good: #6ee7b7;
+  --serif: 'Fraunces', Georgia, serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+
+body {
+  min-height: 100vh;
+  padding-bottom: 80px;
+  background-image:
+    radial-gradient(ellipse at top, rgba(196, 255, 61, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom, rgba(196, 255, 61, 0.02) 0%, transparent 50%);
+}
+
+/* ============ HEADER ============ */
+header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.brand {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-style: italic;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+}
+.brand small {
+  display: block;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-faint);
+  margin-top: 2px;
+}
+.streak {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  text-align: right;
+}
+.streak strong {
+  display: block;
+  font-family: var(--serif);
+  font-size: 28px;
+  color: var(--accent);
+  line-height: 1;
+  font-weight: 500;
+}
+
+/* ============ NAV TABS ============ */
+nav {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+nav::-webkit-scrollbar { display: none; }
+nav button {
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 16px 18px;
+  cursor: pointer;
+  white-space: nowrap;
+  position: relative;
+  transition: color 0.2s;
+}
+nav button.active { color: var(--text); }
+nav button.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 18px; right: 18px;
+  height: 1px;
+  background: var(--accent);
+}
+nav button:hover { color: var(--text-dim); }
+
+/* ============ MAIN ============ */
+main {
+  padding: 24px 20px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.tab-content { display: none; animation: fadeIn 0.3s ease; }
+.tab-content.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============ TYPO ============ */
+h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 32px;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+  line-height: 1.1;
+}
+h2 .num {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 300;
+}
+h3 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 20px;
+  margin: 28px 0 12px;
+  letter-spacing: -0.01em;
+}
+h4 {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  margin: 20px 0 10px;
+  font-weight: 500;
+}
+.subtitle {
+  color: var(--text-dim);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 24px;
+}
+p { color: var(--text-dim); margin-bottom: 12px; font-size: 13px; }
+strong { color: var(--text); font-weight: 500; }
+
+/* ============ CARDS ============ */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 20px;
+  margin-bottom: 12px;
+  border-radius: 2px;
+  transition: border-color 0.2s;
+}
+.card:hover { border-color: var(--border-strong); }
+.card.accent { border-left: 2px solid var(--accent); }
+.card.warn { border-left: 2px solid var(--warning); }
+.card.danger { border-left: 2px solid var(--danger); }
+
+/* ============ HOME ============ */
+.principles {
+  list-style: none;
+  counter-reset: principle;
+}
+.principles li {
+  counter-increment: principle;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+.principles li::before {
+  content: counter(principle, decimal-leading-zero);
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--accent);
+  font-size: 18px;
+  min-width: 32px;
+}
+.principles li:last-child { border-bottom: none; }
+.principles strong { color: var(--text); display: block; margin-bottom: 4px; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; }
+
+.blocks-grid {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+.block-row {
+  display: grid;
+  grid-template-columns: 60px 1fr auto;
+  align-items: center;
+  padding: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  gap: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.block-row:hover { border-color: var(--accent); transform: translateX(4px); }
+.block-row .b-num {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 36px;
+  color: var(--accent);
+  line-height: 1;
+}
+.block-row .b-info strong { display: block; font-size: 14px; margin-bottom: 2px; }
+.block-row .b-info span { color: var(--text-dim); font-size: 11px; }
+.block-row .b-weeks { color: var(--text-faint); font-size: 11px; text-align: right; }
+
+/* ============ PROGRAM ============ */
+.week-selector {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.week-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 8px 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+  border-radius: 2px;
+  min-width: 44px;
+  position: relative;
+}
+.week-btn.active {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+  font-weight: 500;
+}
+.week-btn.completed::after {
+  content: '';
+  position: absolute;
+  top: 4px; right: 4px;
+  width: 4px; height: 4px;
+  background: var(--good);
+  border-radius: 50%;
+}
+.week-btn.active.completed::after { background: var(--bg); }
+
+.session-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 0;
+  margin-bottom: 10px;
+  border-radius: 2px;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+.session-card.done {
+  border-color: var(--good);
+  opacity: 0.7;
+}
+.session-header {
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+.session-header .day {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-faint);
+}
+.session-header .title {
+  font-family: var(--serif);
+  font-size: 18px;
+  margin-top: 2px;
+}
+.session-header .duration {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--accent);
+}
+.session-check {
+  width: 24px; height: 24px;
+  border: 1px solid var(--border-strong);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: transparent;
+}
+.session-check.checked {
+  background: var(--good);
+  border-color: var(--good);
+}
+.session-check.checked::after {
+  content: '✓';
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 600;
+}
+.session-body {
+  padding: 0 20px 20px;
+  border-top: 1px solid var(--border);
+  display: none;
+}
+.session-body.open { display: block; padding-top: 16px; }
+
+.section-block { margin-bottom: 20px; }
+.section-block:last-child { margin-bottom: 0; }
+.section-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--accent);
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px dashed var(--border-strong);
+}
+
+.exercise {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.exercise:last-child { border-bottom: none; }
+.exercise-name {
+  font-family: var(--serif);
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+.exercise-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+.exercise-meta .pill {
+  display: inline-block;
+  padding: 2px 6px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  margin-right: 4px;
+}
+.exercise-note {
+  font-size: 11px;
+  color: var(--text-faint);
+  font-style: italic;
+  line-height: 1.5;
+}
+.exercise-note.left-arm {
+  color: var(--warning);
+  padding: 6px 8px;
+  background: rgba(255, 184, 77, 0.05);
+  border-left: 2px solid var(--warning);
+  margin-top: 6px;
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+.exercise-note.left-arm::before {
+  content: 'GAUCHE — ';
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.session-controls {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--border-strong);
+}
+.btn {
+  background: var(--bg-elev);
+  border: 1px solid var(--border-strong);
+  color: var(--text);
+  padding: 10px 16px;
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+.btn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: 600; }
+.btn.primary:hover { background: var(--accent-dim); color: var(--bg); }
+.btn.full { width: 100%; }
+
+/* ============ LOG / RPE ============ */
+.log-form {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 20px;
+  border-radius: 2px;
+  margin-bottom: 16px;
+}
+.form-row { margin-bottom: 14px; }
+.form-row label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+.form-row input, .form-row textarea, .form-row select {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  color: var(--text);
+  padding: 10px 12px;
+  font-family: var(--mono);
+  font-size: 13px;
+  border-radius: 2px;
+}
+.form-row input:focus, .form-row textarea:focus, .form-row select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.form-row textarea { resize: vertical; min-height: 60px; }
+
+.rpe-scale {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 4px;
+  margin-top: 4px;
+}
+.rpe-btn {
+  aspect-ratio: 1;
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.15s;
+}
+.rpe-btn:hover { border-color: var(--text); }
+.rpe-btn.selected {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+.rpe-btn[data-val="9"].selected, .rpe-btn[data-val="10"].selected {
+  background: var(--warning);
+  border-color: var(--warning);
+}
+
+/* ============ HISTORY ============ */
+.log-entry {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  border-radius: 2px;
+  font-size: 12px;
+}
+.log-entry .log-head {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.log-entry .log-date {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+.log-entry .log-rpe {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--accent);
+  font-size: 14px;
+}
+.log-entry .log-name {
+  font-family: var(--serif);
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+.log-entry .log-note {
+  color: var(--text-dim);
+  font-size: 11px;
+  font-family: var(--mono);
+}
+
+/* ============ TIMER ============ */
+.timer-display {
+  text-align: center;
+  padding: 32px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  margin-bottom: 16px;
+}
+.timer-mode {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+.timer-time {
+  font-family: var(--serif);
+  font-size: 88px;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+.timer-time.warning { color: var(--warning); }
+.timer-time.danger { color: var(--danger); }
+.timer-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 8px;
+}
+.timer-modes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.timer-mode-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 10px;
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  border-radius: 2px;
+}
+.timer-mode-btn.active { border-color: var(--accent); color: var(--accent); }
+
+.timer-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.timer-config {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.preset-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 4px;
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+  border-radius: 2px;
+}
+.preset-btn:hover { border-color: var(--accent); }
+
+/* ============ TEST BRAS GAUCHE ============ */
+.test-grid {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.test-row {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 16px;
+  border-radius: 2px;
+}
+.test-row label {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  display: block;
+  margin-bottom: 8px;
+}
+.test-row .row-flex {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.test-row input {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  color: var(--text);
+  padding: 10px;
+  font-family: var(--mono);
+  font-size: 13px;
+  border-radius: 2px;
+}
+.test-row .unit {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-faint);
+  min-width: 40px;
+}
+
+#chartContainer {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 20px;
+  border-radius: 2px;
+  margin-bottom: 16px;
+}
+#chartContainer h4 { margin-top: 0; }
+canvas { max-width: 100%; height: auto; display: block; }
+
+.test-history {
+  margin-top: 16px;
+}
+
+/* ============ HELPERS ============ */
+.empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-faint);
+  font-style: italic;
+  font-family: var(--serif);
+}
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 24px 0;
+}
+.warning-banner {
+  background: rgba(255, 82, 82, 0.05);
+  border: 1px solid rgba(255, 82, 82, 0.3);
+  border-left: 3px solid var(--danger);
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  border-radius: 2px;
+}
+.warning-banner strong {
+  color: var(--danger);
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  display: block;
+  margin-bottom: 4px;
+}
+.warning-banner p {
+  color: var(--text-dim);
+  font-size: 12px;
+  margin: 0;
+}
+
+.glossary-item {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.glossary-item:last-child { border-bottom: none; }
+.glossary-item dt {
+  font-family: var(--serif);
+  font-size: 15px;
+  color: var(--accent);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+.glossary-item dd {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.export-zone {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+/* ============ MOBILE ============ */
+@media (max-width: 480px) {
+  h2 { font-size: 26px; }
+  .timer-time { font-size: 72px; }
+  main { padding: 20px 16px; }
+  header { padding: 20px 16px 14px; }
+  .brand { font-size: 18px; }
+  .block-row .b-num { font-size: 28px; }
+  nav button { padding: 14px 14px; font-size: 9px; }
+}
+
+/* ============ TOAST ============ */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--accent);
+  color: var(--bg);
+  padding: 10px 20px;
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  border-radius: 2px;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  font-weight: 600;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    Protocole<em> 12</em>
+    <small>Carnet d'entraînement · KB Hardstyle</small>
+  </div>
+  <div class="streak">
+    <strong id="streakCount">0</strong>
+    jours · streak
+  </div>
+</header>
+
+<nav id="nav">
+  <button class="active" data-tab="home">Intro</button>
+  <button data-tab="program">Programme</button>
+  <button data-tab="log">Journal</button>
+  <button data-tab="timer">Timer</button>
+  <button data-tab="test">Bras G.</button>
+  <button data-tab="ref">Réf.</button>
+</nav>
+
+<main>
+
+  <!-- ============ INTRO ============ -->
+  <section id="tab-home" class="tab-content active">
+    <h2><span class="num">00</span> Avertissement</h2>
+    <p class="subtitle">Lire avant d'attaquer</p>
+
+    <div class="warning-banner">
+      <strong>⚠ Feu vert médical requis</strong>
+      <p>Ce programme suppose un accord explicite du cardiologue et du médecin référent Takayasu. Tout vertige, douleur thoracique, dyspnée, claudication aggravée du bras gauche, céphalée inhabituelle ou nouvelle asymétrie tensionnelle → <strong>arrêt immédiat, avis médical</strong>. Mesure TA aux deux bras 1×/semaine et note l'écart dans l'onglet Bras G.</p>
+    </div>
+
+    <h3>Principes directeurs</h3>
+    <ol class="principles">
+      <li>
+        <div>
+          <strong>Asymétrie respectée</strong>
+          Le bras gauche suit son propre tempo. Jamais aligné par défaut sur le droit. RPE ≤ 5 côté gauche tant que la rémission se consolide.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Progression par RPE</strong>
+          Effort perçu /10, pas l'ego. Cible RPE 6-8 sur le travail principal, RPE 4-5 côté gauche.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Respiration sous tension</strong>
+          Expiration sur l'effort. Pas de Valsalva prolongé (apnée bloquée > 1-2s interdite). Pas de tête en bas.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Récupération = partie du programme</strong>
+          48h entre deux séances sollicitant la même chaîne. Sommeil ≥ 7h. Jour OFF strict hebdo.
+        </div>
+      </li>
+    </ol>
+
+    <h3>3 blocs · 12 semaines</h3>
+    <div class="blocks-grid">
+      <div class="block-row" data-go-block="1">
+        <div class="b-num">01</div>
+        <div class="b-info">
+          <strong>Fondations & technique</strong>
+          <span>Swing, goblet, get-up, gainage profond</span>
+        </div>
+        <div class="b-weeks">S1—S4</div>
+      </div>
+      <div class="block-row" data-go-block="2">
+        <div class="b-num">02</div>
+        <div class="b-info">
+          <strong>Construction force-endurance</strong>
+          <span>Densité, swings volume, push/pull bilatéral</span>
+        </div>
+        <div class="b-weeks">S5—S8</div>
+      </div>
+      <div class="block-row" data-go-block="3">
+        <div class="b-num">03</div>
+        <div class="b-info">
+          <strong>Densification athlétique</strong>
+          <span>Complexes, EMOM/AMRAP, explosivité</span>
+        </div>
+        <div class="b-weeks">S9—S12</div>
+      </div>
+    </div>
+
+    <h3>Cadre nutrition</h3>
+    <div class="card">
+      <p style="margin:0;font-size:12px;line-height:1.7">
+        <strong>Déficit modéré</strong> : -300 à -400 kcal/jour (skinny-fat = déficit léger + protéines hautes).<br>
+        <strong>Protéines</strong> : 1,8 à 2,0 g/kg/jour (≈ 130-150 g pour 1m74).<br>
+        <strong>Hydratation</strong> : 2,5-3 L/jour, davantage les jours de run.<br>
+        <strong>Timing</strong> : repas protéiné dans les 90 min post-séance. Café OK avant séance, pas avant 18h.<br>
+        <strong>Pas de plan repas imposé</strong> — joue sur la qualité (légumes, viandes maigres, œufs, poissons, riz, légumineuses, huiles, fruits).
+      </p>
+    </div>
+
+    <h3>Auto-évaluation fin de bloc</h3>
+    <div class="card">
+      <p style="margin:0;font-size:12px;line-height:1.7">
+        À la fin de chaque bloc, valide <strong>3/4 critères</strong> pour passer au suivant :<br>
+        — <strong>Test force</strong> : nombre max swings bilatéraux en 5 min (sans casse technique)<br>
+        — <strong>Test course</strong> : 5 km chronométré ou test 12 min Cooper<br>
+        — <strong>Tour de taille</strong> : mesuré au nombril, à jeun<br>
+        — <strong>RPE moyen</strong> ≤ 7 sur les 2 dernières semaines du bloc<br>
+        Si 2 critères ou moins : consolide le bloc 1 semaine de plus.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ PROGRAMME ============ -->
+  <section id="tab-program" class="tab-content">
+    <h2><span class="num">01</span> Programme</h2>
+    <p class="subtitle">12 semaines · sélection libre</p>
+
+    <h4>Semaine</h4>
+    <div class="week-selector" id="weekSelector"></div>
+
+    <div id="weekContent"></div>
+  </section>
+
+  <!-- ============ JOURNAL ============ -->
+  <section id="tab-log" class="tab-content">
+    <h2><span class="num">02</span> Journal</h2>
+    <p class="subtitle">Charges · RPE · Notes</p>
+
+    <div class="log-form">
+      <div class="form-row">
+        <label>Exercice</label>
+        <input type="text" id="logExercise" placeholder="Ex: Swing 2 mains 12 kg">
+      </div>
+      <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div>
+          <label>Séries × Reps</label>
+          <input type="text" id="logSets" placeholder="5 × 10">
+        </div>
+        <div>
+          <label>Charge</label>
+          <input type="text" id="logLoad" placeholder="12 kg">
+        </div>
+      </div>
+      <div class="form-row">
+        <label>RPE (effort perçu)</label>
+        <div class="rpe-scale" id="rpeScale">
+          <button class="rpe-btn" data-val="1">1</button>
+          <button class="rpe-btn" data-val="2">2</button>
+          <button class="rpe-btn" data-val="3">3</button>
+          <button class="rpe-btn" data-val="4">4</button>
+          <button class="rpe-btn" data-val="5">5</button>
+          <button class="rpe-btn" data-val="6">6</button>
+          <button class="rpe-btn" data-val="7">7</button>
+          <button class="rpe-btn" data-val="8">8</button>
+          <button class="rpe-btn" data-val="9">9</button>
+          <button class="rpe-btn" data-val="10">10</button>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Note (ressenti, bras gauche, technique…)</label>
+        <textarea id="logNote" placeholder="Optionnel"></textarea>
+      </div>
+      <button class="btn primary full" onclick="saveLog()">Enregistrer</button>
+    </div>
+
+    <h4>Historique</h4>
+    <div id="logHistory"></div>
+  </section>
+
+  <!-- ============ TIMER ============ -->
+  <section id="tab-timer" class="tab-content">
+    <h2><span class="num">03</span> Timer</h2>
+    <p class="subtitle">Repos · EMOM · AMRAP</p>
+
+    <div class="timer-modes">
+      <button class="timer-mode-btn active" data-tmode="rest">Repos</button>
+      <button class="timer-mode-btn" data-tmode="emom">EMOM</button>
+      <button class="timer-mode-btn" data-tmode="amrap">AMRAP</button>
+    </div>
+
+    <div class="timer-display">
+      <div class="timer-mode" id="tDisplayMode">Repos</div>
+      <div class="timer-time" id="tDisplay">00:00</div>
+      <div class="timer-meta" id="tMeta"></div>
+    </div>
+
+    <div id="presetWrap">
+      <h4>Presets repos</h4>
+      <div class="preset-grid">
+        <button class="preset-btn" onclick="setRest(30)">0:30</button>
+        <button class="preset-btn" onclick="setRest(45)">0:45</button>
+        <button class="preset-btn" onclick="setRest(60)">1:00</button>
+        <button class="preset-btn" onclick="setRest(90)">1:30</button>
+        <button class="preset-btn" onclick="setRest(120)">2:00</button>
+        <button class="preset-btn" onclick="setRest(150)">2:30</button>
+        <button class="preset-btn" onclick="setRest(180)">3:00</button>
+        <button class="preset-btn" onclick="setRest(240)">4:00</button>
+      </div>
+    </div>
+
+    <div id="emomConfig" style="display:none">
+      <div class="timer-config">
+        <div class="form-row" style="margin:0">
+          <label>Tours</label>
+          <input type="number" id="emomRounds" value="10" min="1" max="60">
+        </div>
+        <div class="form-row" style="margin:0">
+          <label>Minutes/tour</label>
+          <input type="number" id="emomMin" value="1" min="1" max="5">
+        </div>
+      </div>
+    </div>
+
+    <div id="amrapConfig" style="display:none">
+      <div class="form-row">
+        <label>Durée totale (min)</label>
+        <input type="number" id="amrapDuration" value="10" min="1" max="60">
+      </div>
+    </div>
+
+    <div class="timer-controls">
+      <button class="btn primary" id="timerStartBtn" onclick="timerToggle()">Start</button>
+      <button class="btn" onclick="timerReset()">Reset</button>
+    </div>
+  </section>
+
+  <!-- ============ TEST BRAS GAUCHE ============ -->
+  <section id="tab-test" class="tab-content">
+    <h2><span class="num">04</span> Bras gauche</h2>
+    <p class="subtitle">Tests hebdo · suivi rémission</p>
+
+    <div class="warning-banner">
+      <strong>Protocole</strong>
+      <p>Une fois par semaine, même jour, même moment de la journée (matin frais conseillé). Échauffe 5 min avant. Stoppe au moindre signe inhabituel.</p>
+    </div>
+
+    <div class="test-grid">
+      <div class="test-row">
+        <label>Tension artérielle (différence Bras D vs Bras G)</label>
+        <div class="row-flex">
+          <input type="number" id="testTA" placeholder="Ex: 15">
+          <span class="unit">mmHg</span>
+        </div>
+      </div>
+      <div class="test-row">
+        <label>Farmer carry main gauche (KB 12 kg)</label>
+        <div class="row-flex">
+          <input type="number" id="testCarry" placeholder="Distance ou temps">
+          <span class="unit">m ou s</span>
+        </div>
+      </div>
+      <div class="test-row">
+        <label>Goblet squat tenue bras gauche (10 kg max)</label>
+        <div class="row-flex">
+          <input type="number" id="testGoblet" placeholder="Reps">
+          <span class="unit">reps</span>
+        </div>
+      </div>
+      <div class="test-row">
+        <label>Pompes appui gauche seul (genoux OK)</label>
+        <div class="row-flex">
+          <input type="number" id="testPush" placeholder="Reps">
+          <span class="unit">reps</span>
+        </div>
+      </div>
+      <div class="test-row">
+        <label>RPE moyen ressenti bras gauche cette semaine</label>
+        <div class="row-flex">
+          <input type="number" id="testRpe" placeholder="1-10" min="1" max="10">
+          <span class="unit">/10</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn primary full" onclick="saveTest()">Enregistrer le test de la semaine</button>
+
+    <div id="chartContainer" style="margin-top:24px">
+      <h4>Évolution</h4>
+      <canvas id="testChart" width="600" height="300"></canvas>
+    </div>
+
+    <h4>Historique tests</h4>
+    <div id="testHistory"></div>
+
+    <div class="card warn" style="margin-top:20px">
+      <p style="margin:0;font-size:12px;line-height:1.7">
+        <strong style="color:var(--warning)">Signaux d'alerte</strong> — Arrête et consulte si :<br>
+        — Différentiel TA bras D/G augmente brutalement<br>
+        — Douleur, paresthésie, froideur du bras gauche persistante<br>
+        — Fatigue côté gauche disproportionnée 24h après l'effort<br>
+        — Aucune progression sur 3 semaines consécutives malgré charge constante
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ REF ============ -->
+  <section id="tab-ref" class="tab-content">
+    <h2><span class="num">05</span> Référence</h2>
+    <p class="subtitle">Glossaire · Données · Export</p>
+
+    <h3>Glossaire</h3>
+    <dl>
+      <div class="glossary-item">
+        <dt>RPE — Rate of Perceived Exertion</dt>
+        <dd>Effort perçu sur une échelle de 1 à 10. 6 = soutenu mais confortable, 8 = dur mais maîtrisé, 10 = max absolu. On vise 6-8 en travail.</dd>
+      </div>
+      <div class="glossary-item">
+        <dt>Swing (KB)</dt>
+        <dd>Balancement hardstyle. Force motrice = hanches (hip hinge), pas les bras. Expiration percussive en haut, jamais bloquer la respiration.</dd>
+      </div>
+      <div class="glossary-item">
+        <dt>Turkish get-up (TGU)</dt>
+        <dd>Se lever du sol avec une charge tenue à bout de bras. Travail de stabilité épaule, gainage, mobilité hanches. Lent, contrôlé, jamais en force.</dd>
+      </div>
+      <div class="glossary-item">
+        <dt>Gainage profond</dt>
+        <dd>Activation du transverse + plancher pelvien + diaphragme. Plus efficace que crunchs. Planche, dead bug, bird dog, hollow hold.</dd>
+      </div>
+      <div class="glossary-item">
+        <dt>EMOM — Every Minute On the Minute</dt>
+        <dd>Au top de chaque minute, tu fais X reps. Le temps restant = repos. Travail de densité.</dd>
+      </div>
+      <div class="glossary-item">
+        <dt>AMRAP — As Many Rounds As Possible</dt>
+        <dd>Sur une durée fixe (ex: 10 min), tu fais le maximum de tours d'un circuit donné, propre techniquement.</dd>
+      </div>
+      <div class="glossary-item">
+        <dt>Goblet</dt>
+        <dd>Tenir le KB à deux mains contre la poitrine. Position de base pour squat, lunge, carry.</dd>
+      </div>
+      <div class="glossary-item">
+        <dt>Hardstyle</dt>
+        <dd>Méthode KB issue de StrongFirst. Tension max, expiration percussive, alignement strict. Inverse du style girevoy (endurance).</dd>
+      </div>
+      <div class="glossary-item">
+        <dt>Hip hinge</dt>
+        <dd>Charnière de hanche. Mouvement clé du swing et du deadlift. Pli en avant en gardant le dos neutre, en envoyant les fesses en arrière.</dd>
+      </div>
+      <div class="glossary-item">
+        <dt>Valsalva</dt>
+        <dd>Apnée volontaire pour stabiliser le tronc sous charge. À éviter chez Takayasu (pic tensionnel). On préfère respiration synchronisée légère.</dd>
+      </div>
+    </dl>
+
+    <div class="export-zone">
+      <h4>Données</h4>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <button class="btn" onclick="exportData()">Exporter (JSON)</button>
+        <button class="btn" onclick="importData()">Importer</button>
+      </div>
+      <button class="btn full" style="margin-top:8px;color:var(--danger);border-color:rgba(255,82,82,0.3)" onclick="resetData()">Réinitialiser tout</button>
+      <input type="file" id="importFile" accept=".json" style="display:none">
+    </div>
+  </section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============ DATA ============
+const PROGRAM = {
+  blocks: [
+    { num: 1, name: "Fondations & technique", weeks: [1,2,3,4] },
+    { num: 2, name: "Construction force-endurance", weeks: [5,6,7,8] },
+    { num: 3, name: "Densification athlétique", weeks: [9,10,11,12] }
+  ]
+};
+
+// Templates de séances par bloc
+const SESSIONS = {
+  // ====== BLOC 1 ======
+  1: {
+    "force-a": {
+      day: "Lundi", title: "Force A — Hip hinge & Pull", duration: "45 min",
+      warmup: [
+        "Marche dynamique 2 min sur place",
+        "Cat-cow × 8 reps",
+        "Hip hinge sans charge × 10 (devant un mur)",
+        "Halos KB léger × 5 chaque sens",
+        "Glute bridge × 12"
+      ],
+      main: [
+        { name: "Deadlift KB (KB entre les pieds)", meta: "5 séries × 6 reps · 12 kg · repos 90s", note: "Apprentissage du hip hinge. Dos neutre, expiration sur la montée.", left: "Si saisie 1 main : main droite uniquement cette semaine. Gauche = travail technique à vide." },
+        { name: "Swing 2 mains", meta: "5 séries × 10 reps · 12 kg · repos 60s", note: "RPE 6. Hardstyle : explosion hanches, bras tendus relâchés. Pas de Valsalva.", left: null },
+        { name: "Rowing haltère appui table", meta: "3 × 8 reps/côté · 10 kg droite · repos 60s", note: "Coude proche du corps, expiration sur la tirée.", left: "Gauche : 6 kg, RPE max 5. Stop dès gêne." },
+        { name: "Dead bug", meta: "3 × 8 reps/côté · poids du corps", note: "Lombaires plaquées au sol. Respiration lente.", left: null }
+      ],
+      finisher: null,
+      cooldown: ["Étirement ischios assis 60s", "Étirement quadriceps debout 30s/côté", "Pigeon pose 60s/côté", "Respiration 4-7-8 × 5 cycles"]
+    },
+    "force-b": {
+      day: "Mercredi", title: "Force B — Squat & Push", duration: "45 min",
+      warmup: [
+        "Squat poids du corps × 15 (lent)",
+        "Wall slides × 10",
+        "Pompes inclinées contre mur × 10",
+        "Mobilité hanches 90/90 × 6/côté",
+        "Halos KB × 5/sens"
+      ],
+      main: [
+        { name: "Goblet squat KB", meta: "5 × 8 reps · 12 kg · repos 90s", note: "Coudes vers l'intérieur, descente lente 3s, remontée tonique. Genoux suivent les pointes.", left: null },
+        { name: "Pompes sur poignées (push-up handles)", meta: "4 × max-1 reps · repos 90s", note: "Arrête 1 rep avant l'échec. Si trop dur : pompes inclinées sur table.", left: "Si déséquilibre côté gauche : pompes à genoux ou inclinées." },
+        { name: "Turkish Get-Up (TGU)", meta: "3 × 2 reps/côté · 8 kg droite · repos 90s", note: "Lent, contrôlé. Yeux fixés sur la charge. Pas en force.", left: "Gauche : sans charge ou avec une chaussure sur le poing. Pure technique." },
+        { name: "Planche frontale", meta: "3 × 30s · poids du corps · repos 45s", note: "Fessiers serrés, lombaires neutres. Respiration normale.", left: null }
+      ],
+      finisher: null,
+      cooldown: ["Mobilisation thoracique au sol × 6", "Étirement psoas 45s/côté", "Cobra doux × 5 respirations", "Cohérence cardiaque 3 min"]
+    },
+    "kb-flow": {
+      day: "Vendredi", title: "Flow KB — Technique & Conditionnement", duration: "40 min",
+      warmup: [
+        "Skip sur place 60s léger",
+        "Halos KB × 5/sens",
+        "Bonjour à vide × 10",
+        "Swing à vide × 15",
+        "Mobilité épaules dynamique × 10"
+      ],
+      main: [
+        { name: "Swing 2 mains — densité", meta: "EMOM 10 min : 10 swings/min · 12 kg", note: "Travail de respiration et de timing hanches. RPE 6-7.", left: null },
+        { name: "Goblet carry (marche lestée)", meta: "4 × 30m · 12 kg · repos 60s", note: "Posture haute, gainage actif. Respiration nasale si possible.", left: null },
+        { name: "Farmer carry main droite", meta: "3 × 20m · 12 kg · repos 60s", note: "Épaule basse, pas de bascule du bassin.", left: "Gauche : 8 kg (haltère), 15m, RPE max 5. Note la distance dans l'onglet Bras G." },
+        { name: "Bird dog", meta: "3 × 8 reps/côté · lent", note: "Bras et jambe opposés tendus 2s. Anti-rotation.", left: null }
+      ],
+      finisher: null,
+      cooldown: ["Étirement grand dorsal 45s/côté", "Étirement fessiers couché 60s/côté", "Respiration ventrale 3 min"]
+    }
+  },
+
+  // ====== BLOC 2 ======
+  2: {
+    "force-a": {
+      day: "Lundi", title: "Force A — Hip hinge volume", duration: "50 min",
+      warmup: [
+        "Marche dynamique 2 min",
+        "Cat-cow + bird dog × 8",
+        "Glute bridge × 15",
+        "Swing à vide × 15",
+        "Halos KB × 5/sens"
+      ],
+      main: [
+        { name: "Deadlift KB", meta: "5 × 5 reps · 12 kg · repos 90s", note: "Tempo 2-1-1. Cherche la tension maximale dans la chaîne postérieure.", left: null },
+        { name: "Swing 1 main DROITE", meta: "5 × 8 reps · 12 kg · repos 75s", note: "Anti-rotation tronc. Épaule packée. Expiration percussive.", left: "Gauche : swing 2 mains 12 kg × 8 reps OU swing 1 main 8 kg si TA stable. Décide selon test bras G de la semaine." },
+        { name: "Rowing haltère 1 bras", meta: "4 × 8 reps/côté · 10 kg D · repos 75s", note: "Contrôle excentrique 3s.", left: "Gauche : 8 kg max, RPE 5-6. Tempo identique." },
+        { name: "Hollow hold", meta: "3 × 25s · repos 45s", note: "Lombaires au sol. Bras et jambes tendus.", left: null }
+      ],
+      finisher: { name: "Swings 2 mains", meta: "100 reps total en moins de 5 min · 12 kg", note: "Coupe en séries libres. Respiration prioritaire." },
+      cooldown: ["Pigeon 60s/côté", "Étirement ischios 45s/côté", "Cohérence cardiaque 3 min"]
+    },
+    "force-b": {
+      day: "Mercredi", title: "Force B — Push & Carry", duration: "50 min",
+      warmup: [
+        "Squat poids du corps × 15",
+        "Pompes inclinées × 12",
+        "Wall slides × 12",
+        "Halos KB × 5/sens",
+        "T-spine rotations × 8/côté"
+      ],
+      main: [
+        { name: "Pompes sur poignées", meta: "5 × 6-10 reps · repos 75s", note: "Amplitude max, descente 3s. Si facile : pause 2s au sol.", left: "Bras gauche actif : note toute asymétrie de poussée." },
+        { name: "Goblet squat", meta: "4 × 8 reps · 12 kg · repos 90s", note: "Pause 1s en bas. Sortie tonique.", left: null },
+        { name: "Press haltère 1 bras (en pied)", meta: "4 × 6 reps/côté · 10 kg D · repos 75s", note: "Gainage anti-extension. Expiration sur la poussée.", left: "Gauche : 6 kg max, RPE 5. Si gêne : presse à genoux ou Z-press." },
+        { name: "Farmer carry KB droite + haltère gauche", meta: "4 × 30m · 12 kg D / 8 kg G · repos 60s", note: "Charge asymétrique volontaire. Bassin stable.", left: "Inversion possible : 10 kg D / 5 kg G si tolérance gauche limitée." }
+      ],
+      finisher: null,
+      cooldown: ["Étirement pectoraux mur 30s/côté", "Mobilisation thoracique × 8", "Respiration ventrale 3 min"]
+    },
+    "kb-flow": {
+      day: "Vendredi", title: "Flow KB — Conditionnement", duration: "45 min",
+      warmup: [
+        "Skip + jumping jacks 90s",
+        "Halos × 5/sens",
+        "Swings à vide × 20",
+        "Squats sautés léger × 10",
+        "Mobilité hanches × 8"
+      ],
+      main: [
+        { name: "Complexe KB DROITE", meta: "5 tours · Clean + Press + Squat = 1 rep · 5 reps/tour · 12 kg · repos 90s", note: "Enchaînement fluide, respiration entre chaque rep.", left: "Gauche : version goblet (clean → goblet squat → goblet press au menton, sans bras au plafond) 8 kg, 5 reps, RPE 5." },
+        { name: "Swing 1 main alterné", meta: "EMOM 10 min : 6 swings D + 6 G/min · 12 kg D / 8 kg G", note: "Alternance toutes les minutes. Si RPE > 7 côté G : passe en swing 2 mains.", left: "Charge G adaptable. Stop si crampe ou paresthésie." },
+        { name: "Dead bug avec haltère", meta: "3 × 8 reps/côté · 5 kg", note: "Haltère tenu bras tendu vers le plafond, opposé à la jambe qui descend.", left: null }
+      ],
+      finisher: { name: "Burpees sans saut", meta: "AMRAP 4 min · poids du corps", note: "Cadence régulière. Respiration synchronisée. RPE 7 max." },
+      cooldown: ["Étirement quadriceps 30s/côté", "Pigeon 60s/côté", "Respiration nasale 3 min"]
+    },
+    "core-mobility": {
+      day: "Samedi", title: "Gainage profond & mobilité", duration: "30 min",
+      warmup: [
+        "Marche 2 min",
+        "Cat-cow × 10",
+        "Cobra doux × 8"
+      ],
+      main: [
+        { name: "Planche frontale", meta: "4 × 45s · repos 45s", note: "Fessiers serrés, respiration ventrale.", left: null },
+        { name: "Planche latérale", meta: "3 × 25s/côté · repos 30s", note: "Hanche poussée vers le plafond.", left: "Gauche : 15s suffit si gêne épaule. Pas de douleur." },
+        { name: "Bird dog lent", meta: "3 × 10 reps/côté", note: "Tempo 3-2-3. Anti-rotation prioritaire.", left: null },
+        { name: "TGU technique", meta: "3 × 2 reps/côté · 8 kg D / sans charge G", note: "Lent, méditatif. Travail de la position d'épaule.", left: "Gauche : sans charge ou chaussure sur le poing." },
+        { name: "Mobilité hanches 90/90", meta: "3 × 8 transitions/côté", note: "Lent, sans à-coups.", left: null }
+      ],
+      finisher: null,
+      cooldown: ["Cohérence cardiaque 5 min", "Pigeon prolongé 90s/côté"]
+    }
+  },
+
+  // ====== BLOC 3 ======
+  3: {
+    "force-a": {
+      day: "Lundi", title: "Force A — Puissance hip hinge", duration: "50 min",
+      warmup: [
+        "Skip + mobilité dynamique 3 min",
+        "Glute bridge × 15",
+        "Swing à vide × 20",
+        "Halos × 5/sens",
+        "Squat sauté léger × 8"
+      ],
+      main: [
+        { name: "Deadlift KB tempo", meta: "5 × 4 reps · 12 kg · tempo 3-1-X · repos 90s", note: "Descente 3s, pause 1s, montée explosive.", left: null },
+        { name: "Swing 1 main D + transfert G", meta: "5 × (5 D + 5 G)/min EMOM 10 min · 12 kg", note: "Transfert hand-to-hand au sommet. Si G limité : remplace par 2 mains.", left: "Si écart TA stable depuis 4 semaines : 12 kg G autorisé en RPE 6. Sinon : 10 kg max." },
+        { name: "Rowing haltère lourd", meta: "4 × 6 reps/côté · 10 kg D · repos 75s", note: "Contraction maximale en haut, pause 1s.", left: "Gauche : 8-10 kg si test farmer carry G a progressé. Sinon 6-8 kg." },
+        { name: "Hollow rock", meta: "3 × 15 reps · repos 45s", note: "Mouvement contrôlé, dos arrondi.", left: null }
+      ],
+      finisher: { name: "150 swings", meta: "100 swings 2 mains 12 kg en moins de 5 min", note: "Découpage libre. RPE 8 toléré, pas Valsalva." },
+      cooldown: ["Pigeon 60s/côté", "Ischios + lombaires 90s", "Cohérence cardiaque 3 min"]
+    },
+    "force-b": {
+      day: "Mercredi", title: "Force B — Push & Carry densité", duration: "50 min",
+      warmup: [
+        "Pompes inclinées × 12",
+        "Wall slides × 12",
+        "T-spine ouverture × 10",
+        "Halos × 5/sens",
+        "Squat × 15"
+      ],
+      main: [
+        { name: "Pompes sur poignées tempo", meta: "5 × 5-8 reps · tempo 3-1-1 · repos 90s", note: "Descente 3s, pause 1s en bas, remontée tonique. Si trop facile : pieds surélevés.", left: null },
+        { name: "Goblet squat lourd", meta: "5 × 6 reps · 12 kg · repos 90s", note: "Pause 2s en bas. Sortie maximale.", left: null },
+        { name: "Press haltère 1 bras", meta: "4 × 5 reps/côté · 10 kg D · repos 75s", note: "Strict. Pas de hanche.", left: "Gauche : 8 kg si test goblet G ≥ 10 reps, sinon 6 kg. RPE 5-6 max." },
+        { name: "Suitcase carry (1 charge 1 côté)", meta: "4 × 25m/côté · 12 kg D / 10 kg G · repos 45s", note: "Anti-latéro-flexion. Épaules niveau.", left: "Charge G ajustable. Important : ne pas pencher." }
+      ],
+      finisher: { name: "Pompes EMOM", meta: "EMOM 6 min · 6 pompes/min", note: "Garde 30s de récup minimum chaque minute. RPE 7." },
+      cooldown: ["Étirement pectoraux 45s/côté", "Mobilité épaule en suspension 30s", "Respiration ventrale 3 min"]
+    },
+    "kb-flow": {
+      day: "Vendredi", title: "Flow KB — Complexes athlétiques", duration: "45 min",
+      warmup: [
+        "Échauffement complet 5 min",
+        "Halos + bonjours + squats × 10",
+        "Swings à vide × 20"
+      ],
+      main: [
+        { name: "Complexe DROITE", meta: "AMRAP 8 min · Clean + Press + Squat + Swing = 1 round · 12 kg", note: "Note le nombre de rounds. Cible : ≥ 8 rounds.", left: "Gauche : version 8 kg goblet (clean → goblet press menton → goblet squat → swing 2 mains). AMRAP 8 min en parallèle." },
+        { name: "Swing 1 main alterné densité", meta: "EMOM 12 min : 8 swings/min alterné côté chaque minute · 12 kg D / 10 kg G", note: "RPE 7-8. Stop si technique casse.", left: "Charge G adaptable. Si fatigue : passe en 2 mains pour les minutes G." },
+        { name: "TGU complet", meta: "3 × 2 reps/côté · 12 kg D · repos 90s", note: "Lent, méthodique. Maîtrise totale.", left: "Gauche : 8 kg max si TGU technique validé, sinon 6 kg ou chaussure." }
+      ],
+      finisher: { name: "Conditionnement", meta: "AMRAP 5 min : 5 swings + 5 goblet squat + 5 pompes · 12 kg", note: "Cadence libre, technique > vitesse." },
+      cooldown: ["Pigeon 90s/côté", "Étirement complet 5 min"]
+    },
+    "core-mobility": {
+      day: "Samedi", title: "Gainage athlétique & mobilité", duration: "35 min",
+      warmup: [
+        "Marche 2 min",
+        "Cat-cow × 10",
+        "Mobilité hanches × 8"
+      ],
+      main: [
+        { name: "Planche frontale + bascules", meta: "4 × 60s · repos 45s", note: "Mouvement minimal entre épaules/orteils. Respiration constante.", left: null },
+        { name: "Side plank + rotation", meta: "3 × 8 reps/côté · repos 45s", note: "Bras passe sous le corps puis vers le plafond.", left: "Gauche : statique 20s si gêne. Pas de douleur." },
+        { name: "Dead bug haltère/KB", meta: "3 × 10 reps/côté · 5 kg ou 8 kg", note: "Charge tenue bras tendu, opposée à la jambe.", left: null },
+        { name: "Bird dog dynamique", meta: "3 × 10 reps/côté", note: "Coude vers genou, puis extension complète.", left: null },
+        { name: "TGU sans charge", meta: "3 × 3 reps/côté", note: "Pure mobilité. Lent, fluide.", left: null }
+      ],
+      finisher: null,
+      cooldown: ["Cohérence cardiaque 5 min", "Étirement global 5 min"]
+    }
+  }
+};
+
+// Planning hebdo par bloc
+const SCHEDULE = {
+  1: [
+    { day: "Lundi", session: "force-a" },
+    { day: "Mardi", run: "Run easy 20-25 min · RPE 5-6 · respiration nasale si possible", duration: "25 min" },
+    { day: "Mercredi", session: "force-b" },
+    { day: "Jeudi", rest: "OFF · marche, mobilité légère", duration: "—" },
+    { day: "Vendredi", session: "kb-flow" },
+    { day: "Samedi", run: "Run easy 25-30 min · RPE 5-6", duration: "30 min" },
+    { day: "Dimanche", rest: "OFF total", duration: "—" }
+  ],
+  2: [
+    { day: "Lundi", session: "force-a" },
+    { day: "Mardi", run: "Run progressif 30 min · 20min easy + 10min RPE 7", duration: "30 min" },
+    { day: "Mercredi", session: "force-b" },
+    { day: "Jeudi", run: "Run easy 25 min · récup active", duration: "25 min" },
+    { day: "Vendredi", session: "kb-flow" },
+    { day: "Samedi", session: "core-mobility" },
+    { day: "Dimanche", rest: "OFF total", duration: "—" }
+  ],
+  3: [
+    { day: "Lundi", session: "force-a" },
+    { day: "Mardi", run: "Fractionné 30 min · 10min easy + 8×(1min RPE 8 / 1min easy) + 4min easy", duration: "30 min" },
+    { day: "Mercredi", session: "force-b" },
+    { day: "Jeudi", run: "Run easy 25-30 min · récup", duration: "30 min" },
+    { day: "Vendredi", session: "kb-flow" },
+    { day: "Samedi", session: "core-mobility", run: "Optionnel : run long 40-50 min RPE 5-6 si forme", duration: "35-50 min" },
+    { day: "Dimanche", rest: "OFF total", duration: "—" }
+  ]
+};
+
+function getBlockForWeek(w) {
+  if (w <= 4) return 1;
+  if (w <= 8) return 2;
+  return 3;
+}
+
+// ============ STORAGE ============
+const STORAGE_KEY = "takayasu_protocol_v1";
+let DATA = loadData();
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return defaultData();
+    return JSON.parse(raw);
+  } catch (e) { return defaultData(); }
+}
+function defaultData() {
+  return {
+    currentWeek: 1,
+    completedSessions: {}, // "1-Lundi" -> timestamp
+    logs: [],
+    tests: [],
+    lastSessionDate: null,
+    streak: 0
+  };
+}
+function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA));
+}
+
+// ============ TABS ============
+document.querySelectorAll('nav button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (btn.dataset.tab === 'log') renderLogs();
+    if (btn.dataset.tab === 'test') { renderTests(); drawChart(); }
+    if (btn.dataset.tab === 'program') renderWeek();
+  });
+});
+
+document.querySelectorAll('[data-go-block]').forEach(el => {
+  el.addEventListener('click', () => {
+    const block = parseInt(el.dataset.goBlock);
+    const week = (block - 1) * 4 + 1;
+    DATA.currentWeek = week;
+    saveData();
+    document.querySelector('nav button[data-tab="program"]').click();
+  });
+});
+
+// ============ PROGRAM RENDER ============
+function renderWeekSelector() {
+  const sel = document.getElementById('weekSelector');
+  sel.innerHTML = '';
+  for (let w = 1; w <= 12; w++) {
+    const btn = document.createElement('button');
+    btn.className = 'week-btn';
+    btn.textContent = 'S' + w;
+    if (w === DATA.currentWeek) btn.classList.add('active');
+    if (isWeekCompleted(w)) btn.classList.add('completed');
+    btn.onclick = () => { DATA.currentWeek = w; saveData(); renderWeek(); };
+    sel.appendChild(btn);
+  }
+}
+function isWeekCompleted(w) {
+  const block = getBlockForWeek(w);
+  const days = SCHEDULE[block];
+  const required = days.filter(d => d.session).length;
+  let done = 0;
+  days.forEach(d => {
+    if (d.session && DATA.completedSessions[`${w}-${d.day}`]) done++;
+  });
+  return done >= required;
+}
+function renderWeek() {
+  renderWeekSelector();
+  const w = DATA.currentWeek;
+  const block = getBlockForWeek(w);
+  const days = SCHEDULE[block];
+  const wrap = document.getElementById('weekContent');
+
+  let html = `<div class="card accent" style="margin-bottom:20px">
+    <div style="font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.2em;color:var(--text-faint)">Bloc ${block} · Semaine ${w}</div>
+    <div style="font-family:var(--serif);font-size:20px;margin-top:4px">${PROGRAM.blocks[block-1].name}</div>
+  </div>`;
+
+  days.forEach(d => {
+    if (d.session) {
+      const s = SESSIONS[block][d.session];
+      const key = `${w}-${d.day}`;
+      const done = !!DATA.completedSessions[key];
+      html += `
+        <div class="session-card ${done ? 'done' : ''}" data-key="${key}">
+          <div class="session-header" onclick="toggleSession(this)">
+            <div>
+              <div class="day">${d.day} · ${s.duration}</div>
+              <div class="title">${s.title}</div>
+            </div>
+            <div class="session-check ${done ? 'checked' : ''}" onclick="event.stopPropagation();toggleDone('${key}')"></div>
+          </div>
+          <div class="session-body">
+            <div class="section-block">
+              <div class="section-label">Échauffement</div>
+              ${s.warmup.map(e => `<div style="font-size:12px;color:var(--text-dim);padding:3px 0">— ${e}</div>`).join('')}
+            </div>
+            <div class="section-block">
+              <div class="section-label">Bloc principal</div>
+              ${s.main.map(ex => `
+                <div class="exercise">
+                  <div class="exercise-name">${ex.name}</div>
+                  <div class="exercise-meta">${ex.meta.split('·').map(p => `<span class="pill">${p.trim()}</span>`).join('')}</div>
+                  ${ex.note ? `<div class="exercise-note">${ex.note}</div>` : ''}
+                  ${ex.left ? `<div class="exercise-note left-arm">${ex.left}</div>` : ''}
+                </div>
+              `).join('')}
+            </div>
+            ${s.finisher ? `
+              <div class="section-block">
+                <div class="section-label">Finisher</div>
+                <div class="exercise">
+                  <div class="exercise-name">${s.finisher.name}</div>
+                  <div class="exercise-meta">${s.finisher.meta.split('·').map(p => `<span class="pill">${p.trim()}</span>`).join('')}</div>
+                  ${s.finisher.note ? `<div class="exercise-note">${s.finisher.note}</div>` : ''}
+                </div>
+              </div>
+            ` : ''}
+            <div class="section-block">
+              <div class="section-label">Retour au calme</div>
+              ${s.cooldown.map(e => `<div style="font-size:12px;color:var(--text-dim);padding:3px 0">— ${e}</div>`).join('')}
+            </div>
+            <div class="session-controls">
+              <button class="btn" onclick="document.querySelector('nav button[data-tab=&quot;log&quot;]').click()">Logger</button>
+              <button class="btn" onclick="document.querySelector('nav button[data-tab=&quot;timer&quot;]').click()">Timer</button>
+            </div>
+          </div>
+        </div>
+      `;
+    } else if (d.run) {
+      html += `
+        <div class="card" style="border-left:2px solid var(--accent-dim)">
+          <div style="font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.2em;color:var(--text-faint)">${d.day} · ${d.duration} · Course</div>
+          <div style="font-family:var(--serif);font-size:16px;margin-top:6px">${d.run}</div>
+        </div>
+      `;
+    } else if (d.rest) {
+      html += `
+        <div class="card" style="opacity:0.6">
+          <div style="font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.2em;color:var(--text-faint)">${d.day} · Repos</div>
+          <div style="font-family:var(--serif);font-size:15px;margin-top:6px;color:var(--text-dim)">${d.rest}</div>
+        </div>
+      `;
+    }
+  });
+  wrap.innerHTML = html;
+}
+function toggleSession(el) {
+  el.parentElement.querySelector('.session-body').classList.toggle('open');
+}
+function toggleDone(key) {
+  if (DATA.completedSessions[key]) {
+    delete DATA.completedSessions[key];
+  } else {
+    DATA.completedSessions[key] = Date.now();
+    updateStreak();
+    toast("Séance validée");
+  }
+  saveData();
+  renderWeek();
+}
+
+// ============ STREAK ============
+function updateStreak() {
+  const today = new Date().toDateString();
+  const dates = Object.values(DATA.completedSessions).map(t => new Date(t).toDateString());
+  const uniqueDates = [...new Set(dates)].sort((a, b) => new Date(b) - new Date(a));
+  let streak = 0;
+  let cursor = new Date();
+  // Compte les jours consécutifs en partant d'aujourd'hui ou hier
+  if (!uniqueDates.includes(today) && !uniqueDates.includes(new Date(Date.now() - 86400000).toDateString())) {
+    streak = 0;
+  } else {
+    for (let i = 0; i < 60; i++) {
+      const d = new Date(cursor.getTime() - i * 86400000).toDateString();
+      if (uniqueDates.includes(d)) streak++;
+      else if (i > 0) break; // tolérance 1 jour off
+    }
+  }
+  // Méthode simplifiée : compte le nombre de séances faites dans les 7 derniers jours
+  const week = uniqueDates.filter(d => (Date.now() - new Date(d).getTime()) < 7 * 86400000).length;
+  DATA.streak = week;
+  document.getElementById('streakCount').textContent = week;
+}
+
+// ============ LOG ============
+let currentRpe = null;
+document.querySelectorAll('.rpe-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.rpe-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    currentRpe = parseInt(btn.dataset.val);
+  });
+});
+function saveLog() {
+  const ex = document.getElementById('logExercise').value.trim();
+  const sets = document.getElementById('logSets').value.trim();
+  const load = document.getElementById('logLoad').value.trim();
+  const note = document.getElementById('logNote').value.trim();
+  if (!ex) { toast("Nom d'exercice requis"); return; }
+  DATA.logs.unshift({
+    date: Date.now(),
+    exercise: ex,
+    sets, load, rpe: currentRpe, note,
+    week: DATA.currentWeek
+  });
+  saveData();
+  document.getElementById('logExercise').value = '';
+  document.getElementById('logSets').value = '';
+  document.getElementById('logLoad').value = '';
+  document.getElementById('logNote').value = '';
+  document.querySelectorAll('.rpe-btn').forEach(b => b.classList.remove('selected'));
+  currentRpe = null;
+  renderLogs();
+  toast("Enregistré");
+}
+function renderLogs() {
+  const wrap = document.getElementById('logHistory');
+  if (!DATA.logs.length) {
+    wrap.innerHTML = '<div class="empty">Aucune entrée encore. Première séance ?</div>';
+    return;
+  }
+  wrap.innerHTML = DATA.logs.slice(0, 30).map(l => {
+    const d = new Date(l.date);
+    const dStr = `S${l.week} · ${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')} · ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+    return `
+      <div class="log-entry">
+        <div class="log-head">
+          <div class="log-date">${dStr}</div>
+          ${l.rpe ? `<div class="log-rpe">RPE ${l.rpe}</div>` : ''}
+        </div>
+        <div class="log-name">${l.exercise}</div>
+        <div class="log-note">${l.sets || ''} ${l.load ? '· ' + l.load : ''}</div>
+        ${l.note ? `<div class="log-note" style="margin-top:6px;font-style:italic;color:var(--text-faint)">"${l.note}"</div>` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+// ============ TIMER ============
+let timerInterval = null;
+let timerSeconds = 0;
+let timerMode = 'rest';
+let timerRunning = false;
+let emomRound = 0;
+let emomTotalRounds = 10;
+let emomMinPerRound = 1;
+
+document.querySelectorAll('.timer-mode-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.timer-mode-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    timerMode = b.dataset.tmode;
+    timerReset();
+    document.getElementById('presetWrap').style.display = timerMode === 'rest' ? 'block' : 'none';
+    document.getElementById('emomConfig').style.display = timerMode === 'emom' ? 'block' : 'none';
+    document.getElementById('amrapConfig').style.display = timerMode === 'amrap' ? 'block' : 'none';
+    document.getElementById('tDisplayMode').textContent = { rest: 'Repos', emom: 'EMOM', amrap: 'AMRAP' }[timerMode];
+  });
+});
+
+function setRest(s) {
+  timerSeconds = s;
+  updateTimerDisplay();
+}
+function formatTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+}
+function updateTimerDisplay() {
+  const el = document.getElementById('tDisplay');
+  el.textContent = formatTime(Math.max(0, timerSeconds));
+  el.classList.remove('warning', 'danger');
+  if (timerMode === 'rest') {
+    if (timerSeconds <= 5 && timerSeconds > 0) el.classList.add('danger');
+    else if (timerSeconds <= 10) el.classList.add('warning');
+  }
+  const meta = document.getElementById('tMeta');
+  if (timerMode === 'emom') meta.textContent = `Tour ${emomRound}/${emomTotalRounds}`;
+  else if (timerMode === 'amrap') meta.textContent = timerRunning ? 'Tours libres — note ta perf' : '';
+  else meta.textContent = '';
+}
+function timerToggle() {
+  if (timerRunning) { timerStop(); } else { timerStart(); }
+}
+function timerStart() {
+  if (timerMode === 'emom') {
+    emomTotalRounds = parseInt(document.getElementById('emomRounds').value) || 10;
+    emomMinPerRound = parseInt(document.getElementById('emomMin').value) || 1;
+    emomRound = 1;
+    timerSeconds = emomMinPerRound * 60;
+  } else if (timerMode === 'amrap') {
+    const dur = parseInt(document.getElementById('amrapDuration').value) || 10;
+    timerSeconds = dur * 60;
+  } else if (timerSeconds === 0) {
+    timerSeconds = 60;
+  }
+  timerRunning = true;
+  document.getElementById('timerStartBtn').textContent = 'Pause';
+  beep(880, 100);
+  timerInterval = setInterval(() => {
+    timerSeconds--;
+    if (timerSeconds <= 3 && timerSeconds > 0) beep(660, 80);
+    if (timerSeconds <= 0) {
+      if (timerMode === 'emom') {
+        emomRound++;
+        if (emomRound > emomTotalRounds) {
+          timerStop();
+          beep(1320, 400);
+          toast("EMOM terminé");
+          return;
+        }
+        timerSeconds = emomMinPerRound * 60;
+        beep(1100, 200);
+      } else {
+        timerStop();
+        beep(1320, 400);
+        toast(timerMode === 'amrap' ? "AMRAP terminé" : "Temps écoulé");
+        return;
+      }
+    }
+    updateTimerDisplay();
+  }, 1000);
+  updateTimerDisplay();
+}
+function timerStop() {
+  clearInterval(timerInterval);
+  timerRunning = false;
+  document.getElementById('timerStartBtn').textContent = 'Start';
+  updateTimerDisplay();
+}
+function timerReset() {
+  timerStop();
+  timerSeconds = 0;
+  emomRound = 0;
+  updateTimerDisplay();
+}
+// Audio bip
+let audioCtx = null;
+function beep(freq, dur) {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.connect(g); g.connect(audioCtx.destination);
+    o.type = 'sine'; o.frequency.value = freq;
+    g.gain.setValueAtTime(0.15, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur/1000);
+    o.start(); o.stop(audioCtx.currentTime + dur/1000);
+  } catch(e) {}
+}
+
+// ============ TESTS BRAS GAUCHE ============
+function saveTest() {
+  const t = {
+    date: Date.now(),
+    week: DATA.currentWeek,
+    ta: parseFloat(document.getElementById('testTA').value) || null,
+    carry: parseFloat(document.getElementById('testCarry').value) || null,
+    goblet: parseFloat(document.getElementById('testGoblet').value) || null,
+    push: parseFloat(document.getElementById('testPush').value) || null,
+    rpe: parseFloat(document.getElementById('testRpe').value) || null
+  };
+  if (!t.ta && !t.carry && !t.goblet && !t.push && !t.rpe) {
+    toast("Au moins une valeur requise"); return;
+  }
+  DATA.tests.unshift(t);
+  saveData();
+  ['testTA','testCarry','testGoblet','testPush','testRpe'].forEach(id => document.getElementById(id).value = '');
+  renderTests();
+  drawChart();
+  toast("Test enregistré");
+}
+function renderTests() {
+  const wrap = document.getElementById('testHistory');
+  if (!DATA.tests.length) {
+    wrap.innerHTML = '<div class="empty">Aucun test encore.</div>';
+    return;
+  }
+  wrap.innerHTML = DATA.tests.slice(0, 20).map(t => {
+    const d = new Date(t.date);
+    const dStr = `S${t.week} · ${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')}`;
+    const parts = [];
+    if (t.ta != null) parts.push(`ΔTA ${t.ta}mmHg`);
+    if (t.carry != null) parts.push(`Carry ${t.carry}`);
+    if (t.goblet != null) parts.push(`Goblet ${t.goblet}r`);
+    if (t.push != null) parts.push(`Push ${t.push}r`);
+    if (t.rpe != null) parts.push(`RPE ${t.rpe}`);
+    return `
+      <div class="log-entry">
+        <div class="log-head">
+          <div class="log-date">${dStr}</div>
+        </div>
+        <div class="log-note">${parts.join(' · ')}</div>
+      </div>
+    `;
+  }).join('');
+}
+function drawChart() {
+  const canvas = document.getElementById('testChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width = canvas.offsetWidth;
+  const H = canvas.height = 280;
+  ctx.clearRect(0, 0, W, H);
+
+  if (DATA.tests.length < 2) {
+    ctx.fillStyle = '#555';
+    ctx.font = 'italic 13px Fraunces, serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Minimum 2 tests pour afficher le graphique', W/2, H/2);
+    return;
+  }
+
+  const tests = [...DATA.tests].reverse();
+  const metrics = [
+    { key: 'carry', color: '#c4ff3d', label: 'Carry' },
+    { key: 'goblet', color: '#6ee7b7', label: 'Goblet' },
+    { key: 'push', color: '#ffb84d', label: 'Push' }
+  ];
+
+  const padX = 40, padY = 30;
+  const plotW = W - padX * 2;
+  const plotH = H - padY * 2;
+
+  // Lignes de fond
+  ctx.strokeStyle = '#262626';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 4; i++) {
+    const y = padY + (plotH / 4) * i;
+    ctx.beginPath();
+    ctx.moveTo(padX, y);
+    ctx.lineTo(W - padX, y);
+    ctx.stroke();
+  }
+
+  // Pour chaque métrique
+  metrics.forEach((m, idx) => {
+    const vals = tests.map(t => t[m.key]).filter(v => v != null);
+    if (vals.length < 2) return;
+    const max = Math.max(...vals);
+    const min = Math.min(...vals);
+    const range = max - min || 1;
+
+    ctx.strokeStyle = m.color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    let first = true;
+    tests.forEach((t, i) => {
+      if (t[m.key] == null) return;
+      const x = padX + (plotW / Math.max(tests.length - 1, 1)) * i;
+      const y = padY + plotH - ((t[m.key] - min) / range) * plotH;
+      if (first) { ctx.moveTo(x, y); first = false; }
+      else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+
+    // Points
+    ctx.fillStyle = m.color;
+    tests.forEach((t, i) => {
+      if (t[m.key] == null) return;
+      const x = padX + (plotW / Math.max(tests.length - 1, 1)) * i;
+      const y = padY + plotH - ((t[m.key] - min) / range) * plotH;
+      ctx.beginPath();
+      ctx.arc(x, y, 3, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  });
+
+  // Légende
+  ctx.font = '10px JetBrains Mono, monospace';
+  ctx.textAlign = 'left';
+  metrics.forEach((m, i) => {
+    ctx.fillStyle = m.color;
+    ctx.fillRect(padX + i * 80, 8, 8, 8);
+    ctx.fillStyle = '#8a8a8a';
+    ctx.fillText(m.label, padX + i * 80 + 12, 16);
+  });
+}
+
+// ============ EXPORT/IMPORT ============
+function exportData() {
+  const blob = new Blob([JSON.stringify(DATA, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `protocole12_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast("Export téléchargé");
+}
+function importData() {
+  document.getElementById('importFile').click();
+}
+document.getElementById('importFile').addEventListener('change', (e) => {
+  const f = e.target.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = (ev) => {
+    try {
+      const d = JSON.parse(ev.target.result);
+      if (confirm("Remplacer toutes les données actuelles ?")) {
+        DATA = d;
+        saveData();
+        location.reload();
+      }
+    } catch (e) { toast("Fichier invalide"); }
+  };
+  r.readAsText(f);
+});
+function resetData() {
+  if (!confirm("Effacer TOUTES les données ? Cette action est irréversible.")) return;
+  if (!confirm("Vraiment sûr ?")) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+
+// ============ TOAST ============
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+// ============ INIT ============
+updateStreak();
+renderWeek();
+renderLogs();
+renderTests();
+
+window.addEventListener('resize', () => {
+  if (document.getElementById('tab-test').classList.contains('active')) drawChart();
+});
+</script>
+</body>
+</html>
