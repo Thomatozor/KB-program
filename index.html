@@ -2,1924 +2,1765 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0a0a0a">
-<title>Protocole 12 — Carnet d'entraînement</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#ffffff">
+<title>Thomas & Renaud — L'Arène MSA</title>
 <style>
-:root {
-  --bg: #0a0a0a;
-  --bg-elev: #131313;
-  --bg-card: #181818;
-  --border: #262626;
-  --border-strong: #383838;
-  --text: #ededed;
-  --text-dim: #8a8a8a;
-  --text-faint: #555;
-  --accent: #c4ff3d;
-  --accent-dim: #9bcc2e;
-  --danger: #ff5252;
-  --warning: #ffb84d;
-  --good: #6ee7b7;
-  --serif: 'Fraunces', Georgia, serif;
-  --mono: 'JetBrains Mono', monospace;
-}
+/* ── RESET ─────────────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'Helvetica Neue',Arial,sans-serif;background:#f0f0f0;color:#1a1a1a;font-size:14px;}
 
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+/* ── TABS (bottom nav mobile-native) ───────────────────── */
+.app{display:flex;flex-direction:column;height:100%;}
+.tab-content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:calc(68px + env(safe-area-inset-bottom,0px));}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;
+  height:calc(58px + env(safe-area-inset-bottom,0px));
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  background:rgba(255,255,255,.97);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-top:1px solid #e0e0e0;
+  display:flex;align-items:stretch;z-index:1000;
+}
+.tab-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2px;background:none;border:none;cursor:pointer;
+  font-family:'Helvetica Neue',Arial,sans-serif;
+  font-size:9.5px;color:#999;padding:4px 2px 2px;
+  border-top:2px solid transparent;transition:color .15s;
+  min-height:44px;
+}
+.tab-btn .ico{font-size:20px;line-height:1.2;}
+.tab-btn.active-T{color:#c05000;border-top-color:#c05000;}
+.tab-btn.active-home{color:#5020a0;border-top-color:#5020a0;}
+.tab-btn.active-R{color:#0050a0;border-top-color:#0050a0;}
 
-html, body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--mono);
-  font-size: 14px;
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  overscroll-behavior: none;
-}
+/* ── EXISTING PROGRAMME STYLES (preserved) ─────────────── */
+.prog-title{font-size:22px;font-weight:700;margin-bottom:3px;}
+.prog-sub{font-size:12px;color:#888;margin-bottom:4px;}
+.prog-sources{font-size:10.5px;color:#bbb;font-style:italic;margin-bottom:20px;line-height:1.6;}
+.profils{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.profil-card{border-radius:10px;padding:14px 16px;border:1px solid;}
+.profil-T{background:#fff8f0;border-color:#fcd9a8;}
+.profil-R{background:#f0f8ff;border-color:#b8d8f8;}
+.profil-name{font-size:16px;font-weight:700;margin-bottom:6px;}
+.profil-T .profil-name{color:#c05000;}
+.profil-R .profil-name{color:#0050a0;}
+.profil-stat{font-size:12px;color:#555;margin-bottom:3px;}
+.profil-goal{font-size:12px;font-weight:600;margin-top:8px;}
+.profil-T .profil-goal{color:#c05000;}
+.profil-R .profil-goal{color:#0050a0;}
+.takayasu-box{background:#fff0f0;border:1px solid #f5a0a0;border-radius:8px;padding:10px 12px;margin-top:8px;font-size:11.5px;color:#900;}
+.takayasu-box strong{font-size:12px;}
+.planning{display:flex;gap:7px;flex-wrap:wrap;margin:16px 0 12px;}
+.day{text-align:center;padding:9px 7px;border-radius:8px;min-width:64px;border:1px solid;}
+.day .d{font-size:9.5px;color:#999;margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em;}
+.day .s{font-size:12px;font-weight:700;}
+.day-A{background:#fff0f3;border-color:#fbbcc8;}
+.day-B{background:#f0fdf4;border-color:#a8e6c0;}
+.day-C{background:#f0f3ff;border-color:#b8c4f8;}
+.day-run{background:#fff8f0;border-color:#fcd9a8;}
+.day-rest{background:#f8f8f8;border-color:#e0e0e0;color:#bbb;}
+.callout{border-left:4px solid;padding:11px 14px;border-radius:0 8px 8px 0;font-size:13px;line-height:1.7;margin:10px 0 16px;}
+.cl-green{border-color:#2a9d5c;background:#f0fdf4;color:#1a4a2a;}
+.cl-orange{border-color:#c07800;background:#fffaf0;color:#5a3800;}
+.cl-red{border-color:#c00020;background:#fff5f5;color:#700010;}
+.callout strong{font-weight:700;}
+.sci{font-size:11.5px;background:#f8f8ff;border:1px solid #d0d8ff;border-radius:7px;padding:10px 13px;color:#2030a0;line-height:1.7;margin:0 20px 14px;}
+.sci strong{color:#1020a0;}
+.seance{background:#fff;border-radius:12px;margin-bottom:28px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.s-head{padding:16px 20px 13px;}
+.s-head h2{font-size:17px;font-weight:700;margin-bottom:3px;}
+.s-dur{font-size:12px;color:#888;margin-bottom:9px;}
+.hA{background:linear-gradient(135deg,#fff0f3,#ffe4ec);}
+.hA h2{color:#a00020;}
+.hB{background:linear-gradient(135deg,#f0fdf4,#e0f8ec);}
+.hB h2{color:#006030;}
+.hC{background:linear-gradient(135deg,#f0f3ff,#e4eaff);}
+.hC h2{color:#1a2ea0;}
+.mbar{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px;}
+.mt{font-size:10.5px;padding:3px 9px;border-radius:20px;font-weight:700;border:1px solid;}
+.mt-r{background:#fde8ee;color:#900018;border-color:#f5a0b0;}
+.mt-b{background:#e8ecff;color:#1020a0;border-color:#a0b0f5;}
+.mt-v{background:#e0f9f0;color:#005030;border-color:#80ddb0;}
+.mt-g{background:#f5f5f5;color:#555;border-color:#d8d8d8;}
+.mt-dim{opacity:.5;font-style:italic;}
+.act{background:#fffde7;border-bottom:1px solid #f0e060;padding:10px 20px;}
+.act-t{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#b09000;margin-bottom:7px;}
+.act-items{display:flex;flex-wrap:wrap;gap:5px;}
+.act-i{font-size:12px;color:#665000;padding:3px 9px;background:rgba(255,255,255,.8);border:1px solid #e8d030;border-radius:5px;}
+.bloc{padding:12px 20px 4px;font-size:9.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#bbb;}
+.bloc-rappel{color:#d08000;}
+.ex{padding:14px 20px 15px;border-top:1px solid #f5f5f5;}
+.ex-rappel{background:#fffdf5;}
+.ex-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px;}
+.ex-left{flex:1;}
+.ex-num{font-size:11px;color:#bbb;font-weight:700;margin-bottom:3px;}
+.ex-name{font-size:14.5px;font-weight:700;line-height:1.3;margin-bottom:3px;}
+.chips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px;}
+.chip{font-size:12px;padding:3px 9px;border-radius:4px;font-weight:600;}
+.cs{background:#fff8d6;color:#6a5000;}
+.ct{background:#e3f2fd;color:#0d47a1;}
+.cr{background:#f3f3f3;color:#444;}
+.tag-m{font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;white-space:nowrap;background:#e8f5e9;color:#1b5e20;border:1px solid #a5d6a7;}
+.tag-c{font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;white-space:nowrap;background:#e3f2fd;color:#0d47a1;border:1px solid #90caf9;}
+.tag-r{font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;white-space:nowrap;background:#fff8e1;color:#e65100;border:1px solid #ffcc80;font-style:italic;}
+.variants{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:9px;}
+.var-box{border-radius:8px;padding:10px 12px;border:1px solid;}
+.var-T{background:#fff8f0;border-color:#fcd9a8;}
+.var-R{background:#f0f8ff;border-color:#b8d8f8;}
+.var-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px;}
+.var-T .var-label{color:#c05000;}
+.var-R .var-label{color:#0050a0;}
+.var-ex{font-size:13px;font-weight:700;margin-bottom:3px;}
+.var-detail{font-size:12px;color:#666;}
+.ex-note{font-size:13px;color:#555;line-height:1.65;}
+.ex-note p{margin-bottom:5px;}
+.ex-note p:last-child{margin-bottom:0;}
+.ex-note strong{color:#222;}
+.muscles-line{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;padding-top:7px;border-top:1px dashed #eee;}
+.rtag{font-size:11px;padding:2px 8px;border-radius:3px;background:#f8f8f8;color:#888;border:1px solid #e8e8e8;}
+.rtag-m{background:#fff8d6;color:#7a5c00;border-color:#f0d888;font-weight:700;}
+.rtag-r{background:#fff8e1;color:#e65100;border-color:#ffcc80;}
+.bilan{background:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:20px;}
+.bilan h3{font-size:16px;font-weight:700;margin-bottom:5px;}
+.bilan-sub{font-size:12px;color:#888;margin-bottom:14px;}
+.bilan-row{display:grid;grid-template-columns:150px 80px auto 1fr;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #f5f5f5;}
+.bilan-row:last-child{border-bottom:none;}
+.bm{font-size:13px;font-weight:700;}
+.dots{display:flex;gap:4px;}
+.dot{width:24px;height:24px;border-radius:50%;font-size:10.5px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.dA{background:#fff0f3;color:#a00020;border:1.5px solid #fbbcc8;}
+.dC{background:#f0f3ff;color:#1a2ea0;border:1.5px solid #b8c4f8;}
+.dB{background:#f0fdf4;color:#006030;border:1.5px solid #a8e6c0;}
+.d0{background:#f5f5f5;color:#ccc;border:1.5px solid #e0e0e0;}
+.freq-ok{font-size:11.5px;font-weight:700;color:#2a9d5c;}
+.freq-mid{font-size:11.5px;font-weight:700;color:#c07000;}
+.nutri{background:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:20px;}
+.nutri h3{font-size:16px;font-weight:700;margin-bottom:12px;}
+.nutri-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.nutri-card{border-radius:8px;padding:14px;border:1px solid;}
+.nutri-T{background:#fff8f0;border-color:#fcd9a8;}
+.nutri-R{background:#f0f8ff;border-color:#b8d8f8;}
+.nutri-name{font-size:13px;font-weight:700;margin-bottom:10px;}
+.nutri-T .nutri-name{color:#c05000;}
+.nutri-R .nutri-name{color:#0050a0;}
+.nutri-row{font-size:12.5px;color:#444;margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid rgba(0,0,0,.06);}
+.nutri-row:last-child{border-bottom:none;margin-bottom:0;}
+.nutri-val{font-weight:700;color:#1a1a1a;}
+.prog-wrap{background:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:20px;}
+.prog-wrap h3{font-size:16px;font-weight:700;margin-bottom:10px;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{background:#f5f5f5;padding:8px 12px;text-align:left;font-size:11px;color:#666;border-bottom:2px solid #e0e0e0;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
+td{padding:9px 12px;border-bottom:1px solid #f0f0f0;}
+.ok{color:#2a9d5c;font-weight:700;}
+.vid-btn{display:inline-flex;align-items:center;gap:6px;margin-top:7px;padding:6px 12px;background:#ff0000;color:#fff;border-radius:6px;font-size:12px;font-weight:700;text-decoration:none;border:none;cursor:pointer;}
+.vid-note{font-size:11px;color:#888;margin-top:4px;font-style:italic;}
+hr{border:none;border-top:1px solid #e8e8e8;margin:20px 0;}
+.tab-content>*{max-width:760px;margin-left:auto;margin-right:auto;}
+#tab-programme{padding:20px;}
 
-body {
-  min-height: 100vh;
-  padding-bottom: 80px;
-  background-image:
-    radial-gradient(ellipse at top, rgba(196, 255, 61, 0.03) 0%, transparent 50%),
-    radial-gradient(ellipse at bottom, rgba(196, 255, 61, 0.02) 0%, transparent 50%);
-}
-
-/* ============ HEADER ============ */
-header {
-  padding: 24px 20px 16px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-}
-.brand {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-style: italic;
-  font-size: 22px;
-  letter-spacing: -0.02em;
-}
-.brand small {
-  display: block;
-  font-family: var(--mono);
-  font-style: normal;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--text-faint);
-  margin-top: 2px;
-}
-.streak {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--text-dim);
-  text-align: right;
-}
-.streak strong {
-  display: block;
-  font-family: var(--serif);
-  font-size: 28px;
-  color: var(--accent);
-  line-height: 1;
-  font-weight: 500;
-}
-
-/* ============ NAV TABS ============ */
-nav {
-  display: flex;
-  border-bottom: 1px solid var(--border);
-  overflow-x: auto;
-  scrollbar-width: none;
-  background: var(--bg);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-nav::-webkit-scrollbar { display: none; }
-nav button {
-  background: none;
-  border: none;
-  color: var(--text-faint);
-  font-family: var(--mono);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  padding: 16px 18px;
-  cursor: pointer;
-  white-space: nowrap;
-  position: relative;
-  transition: color 0.2s;
-}
-nav button.active { color: var(--text); }
-nav button.active::after {
-  content: '';
-  position: absolute;
-  bottom: -1px; left: 18px; right: 18px;
-  height: 1px;
-  background: var(--accent);
-}
-nav button:hover { color: var(--text-dim); }
-
-/* ============ MAIN ============ */
-main {
-  padding: 24px 20px;
-  max-width: 720px;
-  margin: 0 auto;
-}
-.tab-content { display: none; animation: fadeIn 0.3s ease; }
-.tab-content.active { display: block; }
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ============ TYPO ============ */
-h2 {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: 32px;
-  letter-spacing: -0.02em;
-  margin-bottom: 4px;
-  line-height: 1.1;
-}
-h2 .num {
-  font-style: italic;
-  color: var(--accent);
-  font-weight: 300;
-}
-h3 {
-  font-family: var(--serif);
-  font-weight: 500;
-  font-size: 20px;
-  margin: 28px 0 12px;
-  letter-spacing: -0.01em;
-}
-h4 {
-  font-family: var(--mono);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--text-dim);
-  margin: 20px 0 10px;
-  font-weight: 500;
-}
-.subtitle {
-  color: var(--text-dim);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  margin-bottom: 24px;
-}
-p { color: var(--text-dim); margin-bottom: 12px; font-size: 13px; }
-strong { color: var(--text); font-weight: 500; }
-
-/* ============ CARDS ============ */
-.card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  padding: 20px;
-  margin-bottom: 12px;
-  border-radius: 2px;
-  transition: border-color 0.2s;
-}
-.card:hover { border-color: var(--border-strong); }
-.card.accent { border-left: 2px solid var(--accent); }
-.card.warn { border-left: 2px solid var(--warning); }
-.card.danger { border-left: 2px solid var(--danger); }
-
-/* ============ HOME ============ */
-.principles {
-  list-style: none;
-  counter-reset: principle;
-}
-.principles li {
-  counter-increment: principle;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  gap: 16px;
-  font-size: 13px;
-  color: var(--text-dim);
-}
-.principles li::before {
-  content: counter(principle, decimal-leading-zero);
-  font-family: var(--serif);
-  font-style: italic;
-  color: var(--accent);
-  font-size: 18px;
-  min-width: 32px;
-}
-.principles li:last-child { border-bottom: none; }
-.principles strong { color: var(--text); display: block; margin-bottom: 4px; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; }
-
-.blocks-grid {
-  display: grid;
-  gap: 8px;
-  margin-top: 16px;
-}
-.block-row {
-  display: grid;
-  grid-template-columns: 60px 1fr auto;
-  align-items: center;
-  padding: 16px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  gap: 16px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.block-row:hover { border-color: var(--accent); transform: translateX(4px); }
-.block-row .b-num {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 36px;
-  color: var(--accent);
-  line-height: 1;
-}
-.block-row .b-info strong { display: block; font-size: 14px; margin-bottom: 2px; }
-.block-row .b-info span { color: var(--text-dim); font-size: 11px; }
-.block-row .b-weeks { color: var(--text-faint); font-size: 11px; text-align: right; }
-
-/* ============ PROGRAM ============ */
-.week-selector {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-bottom: 24px;
-}
-.week-btn {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  color: var(--text-dim);
-  padding: 8px 12px;
-  font-family: var(--mono);
-  font-size: 11px;
-  cursor: pointer;
-  border-radius: 2px;
-  min-width: 44px;
-  position: relative;
-}
-.week-btn.active {
-  background: var(--accent);
-  color: var(--bg);
-  border-color: var(--accent);
-  font-weight: 500;
-}
-.week-btn.completed::after {
-  content: '';
-  position: absolute;
-  top: 4px; right: 4px;
-  width: 4px; height: 4px;
-  background: var(--good);
-  border-radius: 50%;
-}
-.week-btn.active.completed::after { background: var(--bg); }
-
-.session-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  padding: 0;
-  margin-bottom: 10px;
-  border-radius: 2px;
-  overflow: hidden;
-  transition: all 0.2s;
-}
-.session-card.done {
-  border-color: var(--good);
-  opacity: 0.7;
-}
-.session-header {
-  padding: 16px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  user-select: none;
-}
-.session-header .day {
-  font-family: var(--mono);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--text-faint);
-}
-.session-header .title {
-  font-family: var(--serif);
-  font-size: 18px;
-  margin-top: 2px;
-}
-.session-header .duration {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--accent);
-}
-.session-check {
-  width: 24px; height: 24px;
-  border: 1px solid var(--border-strong);
-  border-radius: 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  background: transparent;
-}
-.session-check.checked {
-  background: var(--good);
-  border-color: var(--good);
-}
-.session-check.checked::after {
-  content: '✓';
-  color: var(--bg);
-  font-size: 14px;
-  font-weight: 600;
-}
-.session-body {
-  padding: 0 20px 20px;
-  border-top: 1px solid var(--border);
-  display: none;
-}
-.session-body.open { display: block; padding-top: 16px; }
-
-.section-block { margin-bottom: 20px; }
-.section-block:last-child { margin-bottom: 0; }
-.section-label {
-  font-family: var(--mono);
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: 0.25em;
-  color: var(--accent);
-  margin-bottom: 8px;
-  padding-bottom: 6px;
-  border-bottom: 1px dashed var(--border-strong);
-}
-
-.exercise {
-  padding: 10px 0;
-  border-bottom: 1px solid var(--border);
-}
-.exercise:last-child { border-bottom: none; }
-.exercise-name {
-  font-family: var(--serif);
-  font-size: 15px;
-  color: var(--text);
-  margin-bottom: 4px;
-  font-weight: 500;
-}
-.exercise-meta {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--text-dim);
-  margin-bottom: 6px;
-}
-.exercise-meta .pill {
-  display: inline-block;
-  padding: 2px 6px;
-  background: var(--bg-elev);
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  margin-right: 4px;
-}
-.exercise-note {
-  font-size: 11px;
-  color: var(--text-faint);
-  font-style: italic;
-  line-height: 1.5;
-}
-.exercise-note.left-arm {
-  color: var(--warning);
-  padding: 6px 8px;
-  background: rgba(255, 184, 77, 0.05);
-  border-left: 2px solid var(--warning);
-  margin-top: 6px;
-  font-style: normal;
-  font-family: var(--mono);
-  font-size: 11px;
-}
-.exercise-note.left-arm::before {
-  content: 'GAUCHE — ';
-  font-weight: 600;
-  letter-spacing: 0.1em;
-}
-
-.session-controls {
-  display: flex;
-  gap: 8px;
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px dashed var(--border-strong);
-}
-.btn {
-  background: var(--bg-elev);
-  border: 1px solid var(--border-strong);
-  color: var(--text);
-  padding: 10px 16px;
-  font-family: var(--mono);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  cursor: pointer;
-  border-radius: 2px;
-  transition: all 0.2s;
-}
-.btn:hover { border-color: var(--accent); color: var(--accent); }
-.btn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: 600; }
-.btn.primary:hover { background: var(--accent-dim); color: var(--bg); }
-.btn.full { width: 100%; }
-
-/* ============ LOG / RPE ============ */
-.log-form {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  padding: 20px;
-  border-radius: 2px;
-  margin-bottom: 16px;
-}
-.form-row { margin-bottom: 14px; }
-.form-row label {
-  display: block;
-  font-family: var(--mono);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--text-dim);
-  margin-bottom: 6px;
-}
-.form-row input, .form-row textarea, .form-row select {
-  width: 100%;
-  background: var(--bg);
-  border: 1px solid var(--border-strong);
-  color: var(--text);
-  padding: 10px 12px;
-  font-family: var(--mono);
-  font-size: 13px;
-  border-radius: 2px;
-}
-.form-row input:focus, .form-row textarea:focus, .form-row select:focus {
-  outline: none;
-  border-color: var(--accent);
-}
-.form-row textarea { resize: vertical; min-height: 60px; }
-
-.rpe-scale {
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  gap: 4px;
-  margin-top: 4px;
-}
-.rpe-btn {
-  aspect-ratio: 1;
-  background: var(--bg);
-  border: 1px solid var(--border-strong);
-  color: var(--text-dim);
-  font-family: var(--mono);
-  font-size: 12px;
-  cursor: pointer;
-  border-radius: 2px;
-  transition: all 0.15s;
-}
-.rpe-btn:hover { border-color: var(--text); }
-.rpe-btn.selected {
-  background: var(--accent);
-  color: var(--bg);
-  border-color: var(--accent);
-  font-weight: 600;
-}
-.rpe-btn[data-val="9"].selected, .rpe-btn[data-val="10"].selected {
-  background: var(--warning);
-  border-color: var(--warning);
-}
-
-/* ============ HISTORY ============ */
-.log-entry {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  padding: 14px 16px;
-  margin-bottom: 8px;
-  border-radius: 2px;
-  font-size: 12px;
-}
-.log-entry .log-head {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 6px;
-}
-.log-entry .log-date {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--text-faint);
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-}
-.log-entry .log-rpe {
-  font-family: var(--serif);
-  font-style: italic;
-  color: var(--accent);
-  font-size: 14px;
-}
-.log-entry .log-name {
-  font-family: var(--serif);
-  font-size: 14px;
-  margin-bottom: 4px;
-}
-.log-entry .log-note {
-  color: var(--text-dim);
-  font-size: 11px;
-  font-family: var(--mono);
-}
-
-/* ============ TIMER ============ */
-.timer-display {
-  text-align: center;
-  padding: 32px 20px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  margin-bottom: 16px;
-}
-.timer-mode {
-  font-family: var(--mono);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.25em;
-  color: var(--text-dim);
-  margin-bottom: 8px;
-}
-.timer-time {
-  font-family: var(--serif);
-  font-size: 88px;
-  font-weight: 300;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  font-variant-numeric: tabular-nums;
-  color: var(--text);
-}
-.timer-time.warning { color: var(--warning); }
-.timer-time.danger { color: var(--danger); }
-.timer-meta {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--text-dim);
-  margin-top: 8px;
-}
-.timer-modes {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
-  margin-bottom: 16px;
-}
-.timer-mode-btn {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  color: var(--text-dim);
-  padding: 10px;
-  font-family: var(--mono);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  cursor: pointer;
-  border-radius: 2px;
-}
-.timer-mode-btn.active { border-color: var(--accent); color: var(--accent); }
-
-.timer-controls {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-.timer-config {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-.preset-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-  margin-bottom: 16px;
-}
-.preset-btn {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 8px 4px;
-  font-family: var(--mono);
-  font-size: 11px;
-  cursor: pointer;
-  border-radius: 2px;
-}
-.preset-btn:hover { border-color: var(--accent); }
-
-/* ============ TEST BRAS GAUCHE ============ */
-.test-grid {
-  display: grid;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-.test-row {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  padding: 16px;
-  border-radius: 2px;
-}
-.test-row label {
-  font-family: var(--mono);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--text-dim);
-  display: block;
-  margin-bottom: 8px;
-}
-.test-row .row-flex {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-.test-row input {
-  flex: 1;
-  background: var(--bg);
-  border: 1px solid var(--border-strong);
-  color: var(--text);
-  padding: 10px;
-  font-family: var(--mono);
-  font-size: 13px;
-  border-radius: 2px;
-}
-.test-row .unit {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--text-faint);
-  min-width: 40px;
-}
-
-#chartContainer {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  padding: 20px;
-  border-radius: 2px;
-  margin-bottom: 16px;
-}
-#chartContainer h4 { margin-top: 0; }
-canvas { max-width: 100%; height: auto; display: block; }
-
-.test-history {
-  margin-top: 16px;
-}
-
-/* ============ HELPERS ============ */
-.empty {
-  text-align: center;
-  padding: 40px 20px;
-  color: var(--text-faint);
-  font-style: italic;
-  font-family: var(--serif);
-}
-.divider {
-  height: 1px;
-  background: var(--border);
-  margin: 24px 0;
-}
-.warning-banner {
-  background: rgba(255, 82, 82, 0.05);
-  border: 1px solid rgba(255, 82, 82, 0.3);
-  border-left: 3px solid var(--danger);
-  padding: 14px 16px;
-  margin-bottom: 20px;
-  border-radius: 2px;
-}
-.warning-banner strong {
-  color: var(--danger);
-  font-family: var(--mono);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  display: block;
-  margin-bottom: 4px;
-}
-.warning-banner p {
-  color: var(--text-dim);
-  font-size: 12px;
-  margin: 0;
-}
-
-.glossary-item {
-  padding: 14px 0;
-  border-bottom: 1px solid var(--border);
-}
-.glossary-item:last-child { border-bottom: none; }
-.glossary-item dt {
-  font-family: var(--serif);
-  font-size: 15px;
-  color: var(--accent);
-  font-weight: 500;
-  margin-bottom: 4px;
-}
-.glossary-item dd {
-  font-size: 12px;
-  color: var(--text-dim);
-}
-
-.export-zone {
-  margin-top: 32px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border);
-}
-
-/* ============ MOBILE ============ */
-@media (max-width: 480px) {
-  h2 { font-size: 26px; }
-  .timer-time { font-size: 72px; }
-  main { padding: 20px 16px; }
-  header { padding: 20px 16px 14px; }
-  .brand { font-size: 18px; }
-  .block-row .b-num { font-size: 28px; }
-  nav button { padding: 14px 14px; font-size: 9px; }
-}
-
-/* ============ TOAST ============ */
-.toast {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%) translateY(100px);
-  background: var(--accent);
-  color: var(--bg);
-  padding: 10px 20px;
-  font-family: var(--mono);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  border-radius: 2px;
-  z-index: 100;
-  transition: transform 0.3s ease;
-  font-weight: 600;
-}
-.toast.show { transform: translateX(-50%) translateY(0); }
+/* ── JOURNAL STYLES ─────────────────────────────────────── */
+.journal-wrap{padding:16px;max-width:760px;margin:0 auto;}
+.j-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:10px;}
+.j-header h2{font-size:20px;font-weight:700;}
+.j-profile-T{color:#c05000;}
+.j-profile-R{color:#0050a0;}
+.j-new-btn{padding:9px 16px;border-radius:8px;border:none;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.j-new-T{background:#c05000;color:#fff;}
+.j-new-R{background:#0050a0;color:#fff;}
+/* Séance selector */
+.seance-select{display:flex;gap:8px;margin-bottom:16px;}
+.sess-btn{flex:1;padding:10px 6px;border-radius:10px;border:2px solid #e0e0e0;background:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;}
+.sess-btn.sel-A{background:#fff0f3;border-color:#c00020;color:#c00020;}
+.sess-btn.sel-B{background:#f0fdf4;border-color:#006030;color:#006030;}
+.sess-btn.sel-C{background:#f0f3ff;border-color:#1a2ea0;color:#1a2ea0;}
+/* Date picker */
+.date-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.date-row label{font-size:13px;color:#555;font-weight:600;}
+.date-row input[type=date]{flex:1;padding:9px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:14px;font-family:inherit;background:#fff;}
+/* Exercise entry form */
+.ex-entry{background:#fff;border-radius:10px;padding:14px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.07);}
+.ex-entry-name{font-size:13.5px;font-weight:700;margin-bottom:4px;}
+.ex-entry-prescribed{font-size:11.5px;color:#888;margin-bottom:10px;}
+.sets-grid{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:6px;align-items:center;}
+.sets-grid .hdr{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#aaa;text-align:center;padding:2px 0;}
+.sets-grid .hdr:first-child{text-align:left;}
+.set-num{font-size:13px;font-weight:700;color:#aaa;text-align:center;padding:2px 4px;}
+.set-input{width:100%;padding:8px 4px;border:1.5px solid #e0e0e0;border-radius:7px;font-size:16px;text-align:center;font-family:inherit;background:#fafafa;}
+.set-input:focus{border-color:#c05000;outline:none;background:#fff;}
+.set-input-R:focus{border-color:#0050a0;}
+/* Thomas left arm special */
+.set-input-left{border-color:#f5a0a0;background:#fff8f8;}
+.set-input-left:focus{border-color:#c00020;}
+.left-arm-label{font-size:10px;color:#c00020;font-weight:700;text-align:center;grid-column:1/-1;margin-top:4px;}
+/* Note textarea */
+.note-area{width:100%;padding:9px 12px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:14px;font-family:inherit;resize:none;margin-top:10px;background:#fafafa;}
+.note-area:focus{border-color:#c05000;outline:none;background:#fff;}
+/* Save button */
+.save-btn{width:100%;padding:14px;border-radius:10px;border:none;font-size:16px;font-weight:700;cursor:pointer;margin-top:16px;}
+.save-T{background:#c05000;color:#fff;}
+.save-R{background:#0050a0;color:#fff;}
+/* History */
+.history-section{margin-top:24px;}
+.history-title{font-size:16px;font-weight:700;margin-bottom:12px;color:#333;}
+.history-entry{background:#fff;border-radius:10px;padding:13px 14px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.06);cursor:pointer;}
+.history-entry:active{background:#f8f8f8;}
+.he-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+.he-seance{font-size:13px;font-weight:700;}
+.he-seance-A{color:#a00020;}
+.he-seance-B{color:#006030;}
+.he-seance-C{color:#1a2ea0;}
+.he-date{font-size:12px;color:#888;}
+.he-summary{font-size:12px;color:#666;}
+.he-delete{font-size:20px;color:#ddd;padding:4px;border:none;background:none;cursor:pointer;margin-left:8px;}
+/* Detail modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;display:flex;align-items:flex-end;}
+.modal-sheet{background:#fff;border-radius:18px 18px 0 0;width:100%;max-height:88vh;overflow-y:auto;padding:0 0 calc(20px + env(safe-area-inset-bottom,0px));-webkit-overflow-scrolling:touch;}
+.modal-handle{width:36px;height:4px;background:#e0e0e0;border-radius:2px;margin:12px auto 0;}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #f0f0f0;}
+.modal-head h3{font-size:17px;font-weight:700;}
+.modal-close{font-size:24px;background:none;border:none;cursor:pointer;color:#aaa;padding:4px;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;}
+.modal-body{padding:16px;}
+.modal-ex-block{margin-bottom:16px;}
+.modal-ex-name{font-size:13.5px;font-weight:700;margin-bottom:7px;color:#333;}
+.modal-set-row{display:grid;grid-template-columns:28px 1fr 1fr 1fr;gap:6px;padding:6px 10px;border-radius:7px;font-size:13px;margin-bottom:4px;background:#f8f8f8;}
+.modal-set-row.has-data{background:#f0fdf4;}
+.modal-note{font-size:13px;color:#666;font-style:italic;background:#fffde7;padding:10px 12px;border-radius:8px;margin-top:8px;line-height:1.6;}
+/* Progress chart summary */
+.prog-summary{background:#fff;border-radius:10px;padding:14px;margin-top:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.prog-summary-title{font-size:14px;font-weight:700;margin-bottom:10px;color:#333;}
+.prog-ex-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f5f5f5;}
+.prog-ex-row:last-child{border-bottom:none;}
+.prog-ex-name{font-size:12.5px;color:#444;flex:1;padding-right:10px;}
+.prog-ex-best{font-size:13px;font-weight:700;}
+.prog-ex-trend{font-size:11px;color:#2a9d5c;font-weight:700;}
+.prog-ex-trend.down{color:#e05050;}
+/* Empty state */
+.empty-state{text-align:center;padding:48px 20px;color:#aaa;}
+.empty-ico{font-size:40px;margin-bottom:12px;opacity:.4;}
+.empty-txt{font-size:14px;line-height:1.7;}
+/* Toast */
+.toast{position:fixed;bottom:calc(70px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:3000;white-space:nowrap;animation:tin .2s ease;}
+@keyframes tin{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 </style>
 </head>
 <body>
+<div class="app">
 
-<header>
-  <div class="brand">
-    Protocole<em> 12</em>
-    <small>Carnet d'entraînement · KB Hardstyle</small>
+  <!-- ═══ CONTENT AREA ═══ -->
+  <div class="tab-content" id="tabContent">
+
+    <!-- TAB : PROGRAMME (full existing content) -->
+    <div class="tab-pane active" id="tab-programme">
+<div class="prog-title">Programme Thomas & Renaud — L'Arène MSA</div>
+<p class="prog-sub">Push · Lower · Pull · Débutants · Machines guidées · Adapté Takayasu</p>
+<p class="prog-sources">
+Sources originales : Schoenfeld et al. 2016 (JSCR) · Sources récentes (2019–2023) : Lasevicius et al. 2019 (EJSS) · Kassiano et al. 2022 (AJP) · Kassiano et al. 2023 (JSCR) · Baz-Valle et al. 2022 (JHK) · Schwanbeck et al. 2020 (JHK) · Haugen et al. 2023 (Sports Med. Open) · Schoenfeld & Grgic 2020 (S&CJ) · Ralston et al. 2020 (JSCR) · Ferretti et al. 2021 (Nutrients) · Morton et al. 2018 (BJSM) &nbsp;·&nbsp; Programme validé et mis à jour 2026 · Krieger 2010 (J Strength Cond Res) · Schoenfeld, Ogborn & Krieger 2017 (JSCR) · Ralston et al. 2017 (Sports Med.) · Wernbom et al. 2007 (Sports Med.) · Gentil et al. 2007 (J Human Kinetics) · Rhea et al. 2003 (JSCR) · Schoenfeld, Pope et al. 2016 (JSCR) · Wilson et al. 2012 (JSCR) · Barakat et al. 2020 (S&CJ) · Minetto et al. 2011 (Muscle & Nerve) · Reid & Moylan 2011 (J Physiology) · Kerr et al. 1994 (Ann. Internal Medicine) · ACSM Position Stand 2009/2019
+</p>
+
+<!-- PROFILS -->
+<div class="profils">
+  <div class="profil-card profil-T">
+    <div class="profil-name">Thomas · 26 ans</div>
+    <div class="profil-stat">76 kg · 174 cm · IMC 25.1</div>
+    <div class="profil-stat">Débutant muscu · Course 5km/30min</div>
+    <div class="profil-goal">Objectif : Recomposition · ↓ gras + ↑ muscle</div>
+    <div class="takayasu-box">
+      <strong>⚕ Takayasu — bras gauche</strong><br>
+      Arrêt immédiat si douleur bras gauche.<br>
+      Exercices unilatéraux prioritaires.<br>
+      Le bras gauche progresse à son propre rythme.
+    </div>
   </div>
-  <div class="streak">
-    <strong id="streakCount">0</strong>
-    jours · streak
+  <div class="profil-card profil-R">
+    <div class="profil-name">Renaud · 31 ans</div>
+    <div class="profil-stat">78 kg · 182 cm · IMC 23.6</div>
+    <div class="profil-stat">Débutant muscu · Marathonien confirmé</div>
+    <div class="profil-goal">Objectif : Prise de muscle · Corps athlétique</div>
   </div>
-</header>
+</div>
 
-<nav id="nav">
-  <button class="active" data-tab="home">Intro</button>
-  <button data-tab="program">Programme</button>
-  <button data-tab="log">Journal</button>
-  <button data-tab="timer">Timer</button>
-  <button data-tab="test">Bras G.</button>
-  <button data-tab="ref">Réf.</button>
-</nav>
+<!-- PLANNING -->
+<div class="planning">
+  <div class="day day-A"><div class="d">Lun</div><div class="s">A — Push</div></div>
+  <div class="day day-run"><div class="d">Mar</div><div class="s">Run</div></div>
+  <div class="day day-rest"><div class="d">Mer</div><div class="s">Repos</div></div>
+  <div class="day day-B"><div class="d">Jeu</div><div class="s">B — Lower</div></div>
+  <div class="day day-C"><div class="d">Ven</div><div class="s">C — Pull</div></div>
+  <div class="day day-run"><div class="d">Sam</div><div class="s">Run</div></div>
+  <div class="day day-rest"><div class="d">Dim</div><div class="s">Repos</div></div>
+</div>
 
-<main>
+<div style="background:#fff8f0;border:1px solid #fcd9a8;border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:13px;line-height:1.7;color:#5a3800;">
+  <strong style="font-size:14px;">📋 Mise à jour scientifique 2026</strong><br>
+  Ce programme a été vérifié contre les publications 2019–2023. Deux paramètres ont été ajustés par rapport aux sources originales :<br>
+  <strong>1. Temps de repos des exercices d'isolation</strong> : portés à 90 sec minimum (Kassiano et al. 2023, JSCR — les repos courts réduisent l'activation des fibres de type II).<br>
+  <strong>2. Effort perçu (RIR)</strong> : la recherche moderne mesure l'intensité par "reps en réserve" plutôt que par % 1RM fixe (Kassiano 2022, Lasevicius 2019). Finir chaque série avec 2–3 reps encore possibles mais difficiles.<br>
+  Tous les autres paramètres (structure, fréquence, volume, machines, exercices unilatéraux Thomas) sont confirmés par les sources récentes.
+</div>
+<div class="callout cl-green">
+  <strong>Logique du programme :</strong> Push lundi, Pull vendredi — chaque muscle haut du corps reçoit 2 stimulations par semaine via rappels croisés (Schoenfeld 2016 : +40% hypertrophie vs 1×). Lower 1× justifié par 2-3 runs/semaine : Wilson et al. 2012 quantifient l'effet d'interférence course/musculation bas du corps, une 2e séance muscu lower aurait un rendement marginal et surchargerait la récupération.
+</div>
 
-  <!-- ============ INTRO ============ -->
-  <section id="tab-home" class="tab-content active">
-    <h2><span class="num">00</span> Avertissement</h2>
-    <p class="subtitle">Lire avant d'attaquer</p>
+<div class="callout cl-red">
+  <strong>⚕ Thomas — Règle absolue :</strong> la douleur au bras gauche n'est pas une courbature musculaire, c'est un signal vasculaire. Arrêt de l'exercice immédiatement. Le bras gauche travaille avec la charge qu'il peut tenir, jamais forcé à suivre le bras droit. Les exercices unilatéraux (un bras à la fois) sont prioritaires pour le haut du corps.
+</div>
 
-    <div class="warning-banner">
-      <strong>⚠ Feu vert médical requis</strong>
-      <p>Ce programme suppose un accord explicite du cardiologue et du médecin référent Takayasu. Tout vertige, douleur thoracique, dyspnée, claudication aggravée du bras gauche, céphalée inhabituelle ou nouvelle asymétrie tensionnelle → <strong>arrêt immédiat, avis médical</strong>. Mesure TA aux deux bras 1×/semaine et note l'écart dans l'onglet Bras G.</p>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SÉANCE A — PUSH -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="seance">
+  <div class="s-head hA">
+    <h2>Séance A — Push · Lundi · ~65 min</h2>
+    <div class="s-dur">Pectoraux · Épaules · Triceps (dédiés) + rappel Dos + rappel Biceps</div>
+    <div class="mbar">
+      <span class="mt mt-r">Pectoraux ××</span>
+      <span class="mt mt-r">Épaules ××</span>
+      <span class="mt mt-r">Triceps ××</span>
+      <span class="mt mt-b mt-dim">Dos rappel</span>
+      <span class="mt mt-b mt-dim">Biceps rappel</span>
     </div>
+  </div>
 
-    <h3>Principes directeurs</h3>
-    <ol class="principles">
-      <li>
-        <div>
-          <strong>Asymétrie respectée</strong>
-          Le bras gauche suit son propre tempo. Jamais aligné par défaut sur le droit. RPE ≤ 5 côté gauche tant que la rémission se consolide.
-        </div>
-      </li>
-      <li>
-        <div>
-          <strong>Progression par RPE</strong>
-          Effort perçu /10, pas l'ego. Cible RPE 6-8 sur le travail principal, RPE 4-5 côté gauche.
-        </div>
-      </li>
-      <li>
-        <div>
-          <strong>Respiration sous tension</strong>
-          Expiration sur l'effort. Pas de Valsalva prolongé (apnée bloquée > 1-2s interdite). Pas de tête en bas.
-        </div>
-      </li>
-      <li>
-        <div>
-          <strong>Récupération = partie du programme</strong>
-          48h entre deux séances sollicitant la même chaîne. Sommeil ≥ 7h. Jour OFF strict hebdo.
-        </div>
-      </li>
-    </ol>
+  <div class="act">
+    <div class="act-t">Activation — 5 min obligatoire</div>
+    <div class="act-items">
+      <span class="act-i">Rotations épaules pendulaires ×20</span>
+      <span class="act-i">Étirement pec au cadre ×30"/côté</span>
+      <span class="act-i">Rotation thoracique au sol ×8/côté</span>
+      <span class="act-i">Pull-apart élastique ×15</span>
+    </div>
+  </div>
 
-    <h3>3 blocs · 12 semaines</h3>
-    <div class="blocks-grid">
-      <div class="block-row" data-go-block="1">
-        <div class="b-num">01</div>
-        <div class="b-info">
-          <strong>Fondations & technique</strong>
-          <span>Swing, goblet, get-up, gainage profond</span>
-        </div>
-        <div class="b-weeks">S1—S4</div>
-      </div>
-      <div class="block-row" data-go-block="2">
-        <div class="b-num">02</div>
-        <div class="b-info">
-          <strong>Construction force-endurance</strong>
-          <span>Densité, swings volume, push/pull bilatéral</span>
-        </div>
-        <div class="b-weeks">S5—S8</div>
-      </div>
-      <div class="block-row" data-go-block="3">
-        <div class="b-num">03</div>
-        <div class="b-info">
-          <strong>Densification athlétique</strong>
-          <span>Complexes, EMOM/AMRAP, explosivité</span>
-        </div>
-        <div class="b-weeks">S9—S12</div>
+  <div class="sci">
+    <strong>Séquençage exercices (Gentil et al. 2007) :</strong> composés lourds en premier (système nerveux central frais = meilleure activation), isolation en fin. Les rappels biceps/dos en dernière position bénéficient de la pré-fatigue pour un stimulus qualitatif avec charge légère.
+  </div>
+
+  <!-- EX 1 -->
+  <div class="bloc">1 — Composé prioritaire · Pectoraux + Triceps + Épaules</div>
+  <div class="ex">
+    <div class="ex-head">
+      <div class="ex-left">
+        <div class="ex-num">Exercice 1</div>
+        <div class="ex-name">Développé couché — presse pectorale / câble unilatéral</div>
       </div>
     </div>
-
-    <h3>Cadre nutrition</h3>
-    <div class="card">
-      <p style="margin:0;font-size:12px;line-height:1.7">
-        <strong>Déficit modéré</strong> : -300 à -400 kcal/jour (skinny-fat = déficit léger + protéines hautes).<br>
-        <strong>Protéines</strong> : 1,8 à 2,0 g/kg/jour (≈ 130-150 g pour 1m74).<br>
-        <strong>Hydratation</strong> : 2,5-3 L/jour, davantage les jours de run.<br>
-        <strong>Timing</strong> : repas protéiné dans les 90 min post-séance. Café OK avant séance, pas avant 18h.<br>
-        <strong>Pas de plan repas imposé</strong> — joue sur la qualité (légumes, viandes maigres, œufs, poissons, riz, légumineuses, huiles, fruits).
-      </p>
-    </div>
-
-    <h3>Auto-évaluation fin de bloc</h3>
-    <div class="card">
-      <p style="margin:0;font-size:12px;line-height:1.7">
-        À la fin de chaque bloc, valide <strong>3/4 critères</strong> pour passer au suivant :<br>
-        — <strong>Test force</strong> : nombre max swings bilatéraux en 5 min (sans casse technique)<br>
-        — <strong>Test course</strong> : 5 km chronométré ou test 12 min Cooper<br>
-        — <strong>Tour de taille</strong> : mesuré au nombril, à jeun<br>
-        — <strong>RPE moyen</strong> ≤ 7 sur les 2 dernières semaines du bloc<br>
-        Si 2 critères ou moins : consolide le bloc 1 semaine de plus.
-      </p>
-    </div>
-  </section>
-
-  <!-- ============ PROGRAMME ============ -->
-  <section id="tab-program" class="tab-content">
-    <h2><span class="num">01</span> Programme</h2>
-    <p class="subtitle">12 semaines · sélection libre</p>
-
-    <h4>Semaine</h4>
-    <div class="week-selector" id="weekSelector"></div>
-
-    <div id="weekContent"></div>
-  </section>
-
-  <!-- ============ JOURNAL ============ -->
-  <section id="tab-log" class="tab-content">
-    <h2><span class="num">02</span> Journal</h2>
-    <p class="subtitle">Charges · RPE · Notes</p>
-
-    <div class="log-form">
-      <div class="form-row">
-        <label>Exercice</label>
-        <input type="text" id="logExercise" placeholder="Ex: Swing 2 mains 12 kg">
+    <div class="variants">
+      <div class="var-box var-R">
+        <div class="var-label">Renaud</div>
+        <div class="var-ex">Presse pectorale machine (Chest Press)</div>
+        <div class="var-detail">Bilatéral guidé — poignées à hauteur milieu poitrine</div>
       </div>
-      <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <div>
-          <label>Séries × Reps</label>
-          <input type="text" id="logSets" placeholder="5 × 10">
+      <div class="var-box var-T">
+        <div class="var-label">Thomas</div>
+        <div class="var-ex">Développé câble unilatéral assis ou couché</div>
+        <div class="var-detail">Un bras à la fois — bras gauche s'arrête à la limite de confort</div>
+        <a href="https://www.youtube.com/results?search_query=cable+chest+press+one+arm+unilateral+technique" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+      </div>
+    </div>
+    <div class="chips"><span class="chip cs">4 × 10–12</span><span class="chip ct">Tempo 2-1-2-0</span><span class="chip cr">Repos 2 min</span></div>
+    <div class="ex-note">
+      <p><strong>Renaud — réglage :</strong> siège pour que les poignées soient à hauteur milieu de poitrine. Coudes à 45–70° du tronc. Dos et tête plaqués contre le dossier. Poussée en expirant, retour 2s jusqu'à étirement complet. Pas de rebond en position basse.</p>
+      <p><strong>Thomas — câble unilatéral :</strong> câble réglé à hauteur d'épaule ou poulie basse selon la machine. Travailler d'abord le bras droit, puis le bras gauche avec la charge que ce dernier tolère sans douleur. Si le bras gauche fait 3 reps au lieu de 10 — c'est bien, noter et progresser à ce rythme.</p>
+      <p><strong>Progression :</strong> 4 séries × 12 reps propres → +2,5 kg à la prochaine séance A.</p>
+    </div>
+    <div class="muscles-line"><span class="rtag rtag-m">Pectoraux</span><span class="rtag">Triceps</span><span class="rtag">Deltoïde ant.</span></div>
+  </div>
+
+  <!-- EX 2 -->
+  <div class="bloc">2 — Épaules composé</div>
+  <div class="ex">
+    <div class="ex-head">
+      <div class="ex-left">
+        <div class="ex-num">Exercice 2</div>
+        <div class="ex-name">Développé épaules — machine / câble unilatéral</div>
+      </div>
+    </div>
+    <div class="variants">
+      <div class="var-box var-R">
+        <div class="var-label">Renaud</div>
+        <div class="var-ex">Presse épaules machine (Shoulder Press)</div>
+        <div class="var-detail">Poignées à hauteur épaules, dos plaqué</div>
+      </div>
+      <div class="var-box var-T">
+        <div class="var-label">Thomas</div>
+        <div class="var-ex">Développé épaules câble unilatéral</div>
+        <div class="var-detail">Un bras à la fois — même règle bras gauche</div>
+        <a href="https://www.youtube.com/results?search_query=single+arm+cable+shoulder+press+technique+seated" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+      </div>
+    </div>
+    <div class="chips"><span class="chip cs">3 × 12–15</span><span class="chip ct">Tempo 2-1-2-0</span><span class="chip cr">Repos 90 sec</span></div>
+    <div class="ex-note">
+      <p>Pousser droit vers le haut, pas de cambrure lombaire. Ne pas verrouiller les coudes en haut. Thomas : noter la charge du bras gauche séparément.</p>
+    </div>
+    <div class="muscles-line"><span class="rtag rtag-m">Deltoïde (3 chefs)</span><span class="rtag">Triceps</span><span class="rtag">Trapèze sup.</span></div>
+  </div>
+
+
+  <!-- EX 3 -->
+  <div class="bloc">3 — Isolation pectoraux (fly — mouvement différent du press EX1)</div>
+  <div class="ex">
+    <div class="ex-head">
+      <div class="ex-left">
+        <div class="ex-num">Exercice 3</div>
+        <div class="ex-name">Écarté câble croisé (Cable Crossover / Cable Fly)</div>
+      </div>
+    </div>
+    <div class="sci" style="margin:0 0 10px;">
+      <strong>Différence avec EX1 :</strong> EX1 (press) = coudes fléchis à 70-90°, poussée horizontale — travaille pectoraux + triceps + épaules. EX4 (fly) = coudes quasi tendus (10-15° de flexion fixe), bras qui s'ouvrent et se ferment en arc — isole les pectoraux sans les triceps. Calatayud et al. 2015 (J Human Kinetics) : cable fly = tension constante sur tout l'arc du mouvement contrairement au pec-deck qui perd la tension en position intermédiaire.
+    </div>
+    <div class="variants">
+      <div class="var-box var-R">
+        <div class="var-label">Renaud</div>
+        <div class="var-ex">Écarté câble croisé bilatéral (câbles à hauteur d'épaules)</div>
+        <div class="var-detail">Un câble de chaque côté — bras qui se rejoignent devant la poitrine</div>
+      </div>
+      <div class="var-box var-T">
+        <div class="var-label">Thomas</div>
+        <div class="var-ex">Écarté câble unilatéral (un bras à la fois)</div>
+        <div class="var-detail">Câble à hauteur d'épaule — bras droit puis bras gauche séparément</div>
+        <a href="https://www.youtube.com/results?search_query=cable+crossover+fly+chest+isolation+technique+tutorial" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement — écarté câble (différent du press)</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+      </div>
+    </div>
+    <div class="chips"><span class="chip cs">3 × 12–15</span><span class="chip ct">Tempo 2-1-2-0</span><span class="chip cr">Repos 90 sec</span></div>
+    <div class="ex-note">
+      <p><strong>Technique clé :</strong> coudes légèrement fléchis et FIXES pendant tout le mouvement (environ 10-15°, pas plus). Si les coudes se plient davantage → tu repasses en mode press → tu enlèves l'isolation pectorale.</p>
+      <p>Partir bras ouverts sur les côtés (position d'étirement pectoral), ramener les mains devant la poitrine en arc. Contraction 1s en fin, penser à "serrer les pectoraux" en position fermée. Charge légère — brûlure musculaire pectorale recherchée.</p>
+    </div>
+    <div class="muscles-line"><span class="rtag rtag-m">Pectoraux (isolation pure)</span></div>
+  </div>
+
+  <!-- EX 4 -->
+  <div class="bloc">4 — Isolation deltoïde médial</div>
+  <div class="ex">
+    <div class="ex-head">
+      <div class="ex-left">
+        <div class="ex-num">Exercice 4</div>
+        <div class="ex-name">Élévations latérales — machine ou câble unilatéral</div>
+      </div>
+    </div>
+    <div class="variants">
+      <div class="var-box var-R">
+        <div class="var-label">Renaud</div>
+        <div class="var-ex">Élévations latérales machine</div>
+        <div class="var-detail">Bilatéral guidé — charge légère</div>
+      </div>
+      <div class="var-box var-T">
+        <div class="var-label">Thomas</div>
+        <div class="var-ex">Élévations latérales câble unilatéral</div>
+        <div class="var-detail">Un bras à la fois — bras gauche à sa propre charge</div>
+        <a href="https://www.youtube.com/results?search_query=single+arm+cable+lateral+raise+technique+tutorial" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+      </div>
+    </div>
+    <div class="chips"><span class="chip cs">3 × 15–20</span><span class="chip ct">Tempo 2-0-3-0</span><span class="chip cr">Repos 90 sec</span></div>
+    <div class="ex-note">
+      <p><strong>Descente 3s :</strong> Schoenfeld 2010 — la phase excentrique est déterminante pour le deltoïde médial. Amplitude 0–80° (pas au-dessus des épaules). Ne pas hausser les épaules (trapèze). Charge légère.</p>
+    </div>
+    <div class="muscles-line"><span class="rtag rtag-m">Deltoïde médial</span></div>
+  </div>
+
+  <!-- EX 5 déplacé - tirage rappel dos -->
+  <div class="bloc">5 — Rappel dos · bras moins fatigués ici qu'en position 3 (Gentil 2007)</div>
+  <div class="ex">
+    <div class="ex-head">
+      <div class="ex-left">
+        <div class="ex-num">Exercice 5</div>
+        <div class="ex-name">Tirage poulie haute prise large</div>
+      </div>
+      <span class="tag-c">Câble guidé</span>
+    </div>
+    <div class="chips"><span class="chip cs">3 × 12–15</span><span class="chip ct">Tempo 2-1-2-0</span><span class="chip cr">Repos 90 sec</span></div>
+    <div class="ex-note">
+      <p>Même exercice pour les deux — câble guidé vertical. Tirer vers le haut de la poitrine, coudes qui descendent vers les hanches, serrer les omoplates en bas. Ne pas se balancer en arrière.</p>
+      <p><strong>Pourquoi en position 5 :</strong> les bras ne sont pas sollicités par les exercices d'isolation (butterfly, élévations lat) qui précèdent — le tirage arrive donc sur des bras frais, ce qui en fait un vrai rappel de qualité.</p>
+      <p><strong>Thomas :</strong> surveiller si le bras gauche fatigue avant le droit. Si oui, s'arrêter à ce moment-là.</p>
+    <a href="https://www.youtube.com/results?search_query=lat+pulldown+wide+grip+technique+tutorial" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement — tirage poulie haute</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+    </div>
+    <div class="muscles-line"><span class="rtag rtag-r">Grand dorsal (rappel)</span><span class="rtag">Biceps</span><span class="rtag">Trapèze</span></div>
+  </div>
+
+  <!-- EX 6 -->
+  <div class="bloc">6 — Isolation triceps direct</div>
+  <div class="ex">
+    <div class="ex-head">
+      <div class="ex-left">
+        <div class="ex-num">Exercice 6</div>
+        <div class="ex-name">Triceps pushdown câble</div>
+      </div>
+      <span class="tag-c">Câble guidé</span>
+    </div>
+    <div class="chips"><span class="chip cs">3 × 12–15</span><span class="chip ct">Tempo 2-1-2-0</span><span class="chip cr">Repos 90 sec</span></div>
+    <div class="ex-note">
+      <p>Coudes fixés contre le corps. Extension complète, contraction 1s en bas. Remonter lentement. Thomas : peut faire unilatéral si le bilatéral crée une compensation. Travaille la tête longue du triceps, non couverte par la presse pectorale.</p>
+    <a href="https://www.youtube.com/results?search_query=single+arm+cable+tricep+pushdown+technique" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Thomas — voir le triceps pushdown unilatéral</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+    </div>
+    <div class="muscles-line"><span class="rtag rtag-m">Triceps (3 chefs)</span></div>
+  </div>
+
+  <!-- RAPPEL BICEPS -->
+  <div class="bloc bloc-rappel">RAPPEL — Biceps · 2 sets (Ralston 2017 : limiter volume séance A à 6 exos principaux)</div>
+  <div class="ex ex-rappel">
+    <div class="ex-head">
+      <div class="ex-left">
+        <div class="ex-num">Rappel</div>
+        <div class="ex-name">Curl poulie basse — unilatéral ou bilatéral</div>
+      </div>
+      <span class="tag-r">Rappel 2×/sem · 2 sets</span>
+    </div>
+    <div class="variants">
+      <div class="var-box var-R">
+        <div class="var-label">Renaud</div>
+        <div class="var-ex">Curl poulie basse bilatéral ou haltères</div>
+        <div class="var-detail">Charge légère, mouvement strict</div>
+      </div>
+      <div class="var-box var-T">
+        <div class="var-label">Thomas</div>
+        <div class="var-ex">Curl poulie basse unilatéral</div>
+        <div class="var-detail">Bras droit normal, bras gauche à sa limite</div>
+        <a href="https://www.youtube.com/results?search_query=single+arm+cable+bicep+curl+low+pulley+technique" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+      </div>
+    </div>
+    <div class="chips"><span class="chip cs">2 × 12–15</span><span class="chip ct">Tempo 2-0-3-0</span><span class="chip cr">Repos 60 sec</span></div>
+    <div class="ex-note">
+      <p>2 sets suffisent ici — Ralston 2017 (Sports Medicine) : au-delà de 6 exercices en séance débutant, la qualité technique baisse. Les biceps ont déjà travaillé indirectement sur le tirage poulie (EX5). Descente 3s (Schoenfeld 2014). Coudes fixes contre le corps.</p>
+    </div>
+    <div class="muscles-line"><span class="rtag rtag-r">Biceps (rappel 2×/sem)</span><span class="rtag">Brachial</span></div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SÉANCE B — LOWER -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="seance">
+  <div class="s-head hB">
+    <h2>Séance B — Lower · Jeudi · ~50 min</h2>
+    <div class="s-dur">Séance identique pour les deux — machines bilatérales, aucune asymétrie MS</div>
+    <div class="mbar">
+      <span class="mt mt-v">Quadriceps</span>
+      <span class="mt mt-v">Grand fessier</span>
+      <span class="mt mt-v">Fessier moyen</span>
+      <span class="mt mt-v">Ischios</span>
+      <span class="mt mt-v">Mollets</span>
+    </div>
+  </div>
+
+  <div class="act">
+    <div class="act-t">Activation — 5 min</div>
+    <div class="act-items">
+      <span class="act-i">Glute bridge au sol ×15</span>
+      <span class="act-i">Cercles de hanche ×10/sens</span>
+      <span class="act-i">Fente marchée sans charge ×8/jambe</span>
+      <span class="act-i">Mobilisation cheville contre mur ×10/côté</span>
+    </div>
+  </div>
+
+  <div class="sci">
+    <strong>Séance identique Thomas et Renaud :</strong> aucune asymétrie des membres inférieurs liée à la maladie de Takayasu. Les deux peuvent utiliser toutes les machines bilatérales du bas du corps normalement.
+  </div>
+
+  <div class="bloc">1 — Composé prioritaire quadriceps + fessiers</div>
+  <div class="ex">
+    <div class="ex-head">
+      <div class="ex-left"><div class="ex-num">Exercice 1</div><div class="ex-name">Leg Press machine (Presse à cuisses)</div></div>
+      <span class="tag-m">Machine guidée</span>
+    </div>
+    <div class="chips"><span class="chip cs">4 × 12–15</span><span class="chip ct">Tempo 3-1-1-0</span><span class="chip cr">Repos 2 min</span></div>
+    <div class="ex-note">
+      <p><strong>Réglage :</strong> genoux à 90° en position basse. Pieds largeur d'épaules, légèrement en canard. Dos plaqué contre le dossier en permanence. Ne jamais verrouiller les genoux en haut.</p>
+      <p><strong>Mouvement :</strong> descente lente 3s, poussée franche. Les genoux doivent rester dans l'alignement des orteils — ne jamais s'effondrer vers l'intérieur.</p>
+    <a href="https://www.youtube.com/results?search_query=leg+press+machine+technique+form+tutorial" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+    </div>
+    <div class="muscles-line"><span class="rtag rtag-m">Quadriceps</span><span class="rtag rtag-m">Fessiers</span><span class="rtag">Ischios</span></div>
+  </div>
+
+  <div class="bloc">2 — Fessiers isolation (activation maximale)</div>
+  <div class="ex">
+    <div class="ex-head">
+      <div class="ex-left"><div class="ex-num">Exercice 2</div><div class="ex-name">Hip Thrust machine ou Smith Machine</div></div>
+      <span class="tag-m">Machine guidée</span>
+    </div>
+    <div class="chips"><span class="chip cs">4 × 12–15</span><span class="chip ct">Tempo 2-2-1-0</span><span class="chip cr">Repos 2 min</span></div>
+    <div class="ex-note">
+      <p>Épaules sur banc, pieds à plat. Pousser avec les <strong>talons</strong>, pas les orteils. Contraction maximale des fessiers au sommet, tenir 2 secondes. Bassin neutre en haut — jamais d'hyperextension lombaire.</p>
+    <a href="https://www.youtube.com/results?search_query=hip+thrust+machine+barbell+technique+glutes" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+    </div>
+    <div class="muscles-line"><span class="rtag rtag-m">Grand fessier</span><span class="rtag">Ischios</span></div>
+  </div>
+
+  <div class="bloc">3 — Ischios isolation (phase excentrique critique)</div>
+  <div class="ex">
+    <div class="ex-head">
+      <div class="ex-left"><div class="ex-num">Exercice 3</div><div class="ex-name">Leg Curl machine (Flexion jambes)</div></div>
+      <span class="tag-m">Machine guidée</span>
+    </div>
+    <div class="chips"><span class="chip cs">3 × 12–15</span><span class="chip ct">Tempo 2-1-3-0</span><span class="chip cr">Repos 90 sec</span></div>
+    <div class="ex-note">
+      <p><strong>Descente 3s impérative :</strong> Schoenfeld 2010 — la phase excentrique lente est la plus efficace pour les ischios. Hanche plaquée contre la machine, ne pas décoller pour aider.</p>
+    <a href="https://www.youtube.com/results?search_query=leg+curl+machine+technique+hamstrings+tutorial" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+    </div>
+    <div class="muscles-line"><span class="rtag rtag-m">Ischios</span></div>
+  </div>
+
+  <div class="bloc">4 — Fessier moyen (prévention blessure genou à la course · ACSM 2019)</div>
+  <div class="ex">
+    <div class="ex-head">
+      <div class="ex-left"><div class="ex-num">Exercice 4</div><div class="ex-name">Abduction hanche machine</div></div>
+      <span class="tag-m">Machine guidée</span>
+    </div>
+    <div class="chips"><span class="chip cs">3 × 15–20</span><span class="chip ct">Tempo 2-1-2-0</span><span class="chip cr">Repos 90 sec</span></div>
+    <div class="ex-note">
+      <p>Dos plaqué contre le dossier. Mouvement contrôlé dans les deux sens. Amplitude maximale sans rotation du bassin. <strong>Particulièrement important pour Thomas et Renaud en tant que coureurs</strong> : renforce la stabilité du genou et prévient le syndrome fémoro-patellaire.</p>
+    <a href="https://www.youtube.com/results?search_query=hip+abduction+machine+technique+glute+med" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+    </div>
+    <div class="muscles-line"><span class="rtag rtag-m">Fessier moyen</span><span class="rtag">TFL</span></div>
+  </div>
+
+  <div class="bloc">5 — Mollets (fibres lentes · repos court intentionnel)</div>
+  <div class="ex">
+    <div class="ex-head">
+      <div class="ex-left"><div class="ex-num">Exercice 5</div><div class="ex-name">Mollets machine debout (Standing Calf Raises)</div></div>
+      <span class="tag-m">Machine guidée</span>
+    </div>
+    <div class="chips"><span class="chip cs">4 × 15–20</span><span class="chip ct">Tempo 2-1-3-0</span><span class="chip cr">Repos 75 sec</span></div>
+    <div class="ex-note">
+      <p>Amplitude complète : talon qui descend sous la plateforme (étirement complet) → montée maximale sur la pointe. Descente 3s. Les fibres lentes des mollets récupèrent rapidement, le repos court de 60s est intentionnel.</p>
+    <a href="https://www.youtube.com/results?search_query=standing+calf+raise+machine+technique+tutorial" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+    </div>
+    <div class="muscles-line"><span class="rtag rtag-m">Gastrocnémien</span><span class="rtag">Soléaire</span></div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SÉANCE C — PULL -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="seance">
+  <div class="s-head hC">
+    <h2>Séance C — Pull · Vendredi · ~62 min</h2>
+    <div class="s-dur">Dos · Biceps · Deltoïde post. (dédiés) + rappel Pectoraux + Triceps</div>
+    <div class="mbar">
+      <span class="mt mt-b">Grand dorsal ××</span>
+      <span class="mt mt-b">Biceps ××</span>
+      <span class="mt mt-b">Deltoïde post. ××</span>
+      <span class="mt mt-r mt-dim">Pectoraux rappel</span>
+      <span class="mt mt-r mt-dim">Triceps rappel</span>
+    </div>
+  </div>
+
+  <div class="act">
+    <div class="act-t">Activation — 5 min</div>
+    <div class="act-items">
+      <span class="act-i">Dead hang barre fixe ×20–30"</span>
+      <span class="act-i">Rétraction scapulaire ×15</span>
+      <span class="act-i">Rotation externe épaule bras fléchi ×12/côté</span>
+      <span class="act-i">Face pull très léger ×15</span>
+    </div>
+  </div>
+
+  <div class="sci">
+    <strong>Séquençage Gentil 2007 :</strong> rowing horizontal avant tirage vertical — active d'abord les muscles posturaux profonds (trapèzes, rhomboïdes) puis le grand dorsal. Ce séquençage optimise l'activation neuromusculaire du dos.
+  </div>
+
+  <!-- EX 1 -->
+  <div class="bloc">1 — Composé dos horizontal (force · excentrique prioritaire)</div>
+  <div class="ex">
+    <div class="ex-head">
+      <div class="ex-left">
+        <div class="ex-num">Exercice 1</div>
+        <div class="ex-name">Rowing — machine seated ou câble unilatéral</div>
+      </div>
+    </div>
+    <div class="variants">
+      <div class="var-box var-R">
+        <div class="var-label">Renaud</div>
+        <div class="var-ex">Rowing machine seated prise neutre</div>
+        <div class="var-detail">Bilatéral guidé — descente 3s obligatoire</div>
+      </div>
+      <div class="var-box var-T">
+        <div class="var-label">Thomas</div>
+        <div class="var-ex">Rowing câble unilatéral assis</div>
+        <div class="var-detail">Un bras à la fois — bras gauche à sa limite</div>
+        <a href="https://www.youtube.com/results?search_query=single+arm+seated+cable+row+technique+tutorial" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+      </div>
+    </div>
+    <div class="chips"><span class="chip cs">4 × 10–12</span><span class="chip ct">Tempo 2-1-3-0</span><span class="chip cr">Repos 2 min</span></div>
+    <div class="ex-note">
+      <p>Tirer vers le ventre, coudes le long du corps, serrer les omoplates en fin. <strong>Descente 3s</strong> — phase excentrique la plus efficace pour le grand dorsal. Pas de balancement du buste (= signe de charge trop lourde).</p>
+    </div>
+    <div class="muscles-line"><span class="rtag rtag-m">Grand dorsal</span><span class="rtag rtag-m">Trapèze moyen</span><span class="rtag">Rhomboïdes</span><span class="rtag">Biceps</span></div>
+  </div>
+
+  <!-- EX 2 - Rear delt fly déplacé ici pour séparer les 2 composés dos -->
+  <div class="bloc">2 — Deltoïde postérieur · biceps récupèrent entre rowing et tirage (Gentil 2007)</div>
+  <div class="ex">
+    <div class="ex-head">
+      <div class="ex-left">
+        <div class="ex-num">Exercice 2</div>
+        <div class="ex-name">Butterfly inverse machine (Rear Delt Fly)</div>
+      </div>
+      <span class="tag-m">Machine guidée</span>
+    </div>
+    <div class="chips"><span class="chip cs">3 × 15–20</span><span class="chip ct">Tempo 2-1-2-0</span><span class="chip cr">Repos 90 sec</span></div>
+    <div class="ex-note">
+      <p>S'asseoir à l'envers sur la machine butterfly (face vers le coussin). Tirer les bras en arrière, charge légère, technique parfaite. Corrige la posture voûtée, stabilise l'articulation de l'épaule. Thomas : si la machine sollicite asymétriquement, passer au câble unilatéral rear delt.</p>
+      <p><strong>Pourquoi en position 2 :</strong> intercaler cet exercice entre rowing et tirage permet aux biceps de récupérer 90 secondes entre deux exercices qui les sollicitent intensément. Gentil 2007 (J Human Kinetics) : diversifier les patterns entre composés améliore la qualité globale de la séance.</p>
+    <a href="https://www.youtube.com/results?search_query=rear+delt+fly+machine+reverse+pec+deck+technique" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement — butterfly inverse</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+    </div>
+    <div class="muscles-line"><span class="rtag rtag-m">Deltoïde post.</span><span class="rtag">Rhomboïdes</span><span class="rtag">Trapèze moyen</span></div>
+  </div>
+
+  <!-- EX 3 -->
+  <div class="bloc">3 — Composé dos vertical</div>
+  <div class="ex">
+    <div class="ex-head">
+      <div class="ex-left">
+        <div class="ex-num">Exercice 3</div>
+        <div class="ex-name">Tirage poulie haute prise neutre serrée</div>
+      </div>
+      <span class="tag-c">Câble guidé</span>
+    </div>
+    <div class="chips"><span class="chip cs">4 × 10–12</span><span class="chip ct">Tempo 2-1-2-0</span><span class="chip cr">Repos 2 min</span></div>
+    <div class="ex-note">
+      <p>Prise neutre (paumes face à face). Tirer vers le haut de la poitrine. Légère inclinaison arrière 15–20° acceptable. Contraction grand dorsal, omoplates serrées. Thomas : surveiller fatigue bras gauche.</p>
+    <a href="https://www.youtube.com/results?search_query=close+grip+neutral+lat+pulldown+technique" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+    </div>
+    <div class="muscles-line"><span class="rtag rtag-m">Grand dorsal</span><span class="rtag">Biceps</span><span class="rtag">Trapèze inf.</span></div>
+  </div>
+
+  <!-- EX 4 -->
+  <div class="bloc">4 — Biceps isolation directe</div>
+  <div class="ex">
+    <div class="ex-head">
+      <div class="ex-left">
+        <div class="ex-num">Exercice 4</div>
+        <div class="ex-name">Curl biceps machine ou câble unilatéral</div>
+      </div>
+    </div>
+    <div class="variants">
+      <div class="var-box var-R">
+        <div class="var-label">Renaud</div>
+        <div class="var-ex">Curl biceps machine (coudes sur appui)</div>
+        <div class="var-detail">Bilatéral — supination en fin</div>
+      </div>
+      <div class="var-box var-T">
+        <div class="var-label">Thomas</div>
+        <div class="var-ex">Curl câble unilatéral bas</div>
+        <div class="var-detail">Un bras à la fois — bras gauche à sa limite</div>
+        <a href="https://www.youtube.com/results?search_query=single+arm+cable+bicep+curl+technique+form" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+      </div>
+    </div>
+    <div class="chips"><span class="chip cs">3 × 12–15</span><span class="chip ct">Tempo 2-0-3-0</span><span class="chip cr">Repos 90 sec</span></div>
+    <div class="ex-note">
+      <p>Coudes fixes. Supination en fin (poignets qui tournent vers le haut). <strong>Descente 3s</strong> — Schoenfeld 2014 : phase excentrique lente = +10% hypertrophie biceps.</p>
+    </div>
+    <div class="muscles-line"><span class="rtag rtag-m">Biceps brachial</span><span class="rtag">Brachial</span></div>
+  </div>
+
+  <!-- EX 5 -->
+  <div class="bloc">5 — Finisher santé épaules · NE JAMAIS SAUTER</div>
+  <div class="ex">
+    <div class="ex-head">
+      <div class="ex-left">
+        <div class="ex-num">Exercice 5</div>
+        <div class="ex-name">Face pull câble corde — rotation externe</div>
+      </div>
+      <span class="tag-c">Câble guidé</span>
+    </div>
+    <div class="chips"><span class="chip cs">3 × 15–20</span><span class="chip ct">Tempo 2-2-1-0</span><span class="chip cr">Repos 90 sec</span></div>
+    <div class="ex-note">
+      <p>Câble à hauteur des yeux. Tirer vers le visage, <strong>coudes plus hauts que les mains</strong>, poignets qui montent (rotation externe). Tenir 2s en position finale. Charge très légère.</p>
+    <a href="https://www.youtube.com/results?search_query=cable+face+pull+rope+external+rotation+technique" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement (très important — regarder attentivement la rotation externe)</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+      <p><strong>Pourquoi obligatoire :</strong> Reinold et al. JOSPT 2009 — renforcement des rotateurs externes = mesure préventive n°1 contre les tendinopathies de la coiffe chez les personnes pratiquant régulièrement du développé couché et overhead press.</p>
+    </div>
+    <div class="muscles-line"><span class="rtag rtag-m">Rotateurs ext. (infra-épineux, petit rond)</span><span class="rtag">Deltoïde post.</span></div>
+  </div>
+
+  <!-- RAPPELS -->
+  <div class="bloc bloc-rappel">RAPPELS — Pectoraux + Triceps · 2 exercices séparés (remplace les dips · Fees 1998)</div>
+
+  <!-- RAPPEL PECTORAUX -->
+  <div class="ex ex-rappel">
+    <div class="ex-head">
+      <div class="ex-left">
+        <div class="ex-num">Rappel A</div>
+        <div class="ex-name">Écarté câble croisé léger (Cable Fly) — rappel pectoraux</div>
+      </div>
+      <span class="tag-r">Rappel pectoraux 2×</span>
+    </div>
+    <div class="variants">
+      <div class="var-box var-R">
+        <div class="var-label">Renaud</div>
+        <div class="var-ex">Cable crossover bilatéral léger</div>
+        <div class="var-detail">Câbles à hauteur d'épaules — charge très légère, sensation de brûlure</div>
+      </div>
+      <div class="var-box var-T">
+        <div class="var-label">Thomas</div>
+        <div class="var-ex">Écarté câble unilatéral léger</div>
+        <div class="var-detail">Un bras à la fois — bras gauche à sa limite, charge minimale</div>
+        <a href="https://www.youtube.com/results?search_query=cable+crossover+fly+light+chest+isolation+technique" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement — écarté câble</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+      </div>
+    </div>
+    <div class="chips"><span class="chip cs">2 × 15–20</span><span class="chip ct">Tempo 2-1-2-0</span><span class="chip cr">Repos 75 sec</span></div>
+    <div class="ex-note">
+      <p>Charge très légère — l'objectif est la sensation de contraction pectorale, pas la charge. Coudes légèrement fléchis et fixes. Brûlure musculaire en fin de série = signe que c'est efficace.</p>
+      <p><strong>Pourquoi remplacer les dips :</strong> Fees et al. 1998 (J Athletic Training) — les dips génèrent un stress élevé sur l'articulation acromio-claviculaire chez les débutants. Kuechle et al. 1997 (J Shoulder Elbow Surgery) : risque d'impingement sous-acromial si le deltoïde postérieur n'est pas encore suffisamment développé (= phase débutant). L'écarté câble donne un rappel pectoral équivalent sans ce risque.</p>
+    </div>
+    <div class="muscles-line"><span class="rtag rtag-r">Pectoraux (rappel 2×)</span></div>
+  </div>
+
+  <!-- RAPPEL TRICEPS -->
+  <div class="ex ex-rappel">
+    <div class="ex-head">
+      <div class="ex-left">
+        <div class="ex-num">Rappel B</div>
+        <div class="ex-name">Extension triceps tête haute câble (Overhead Triceps Extension)</div>
+      </div>
+      <span class="tag-r">Rappel triceps 2×</span>
+    </div>
+    <div class="variants">
+      <div class="var-box var-R">
+        <div class="var-label">Renaud</div>
+        <div class="var-ex">Overhead triceps extension câble bilatéral (corde)</div>
+        <div class="var-detail">Câble bas, dos tourné, bras au-dessus de la tête</div>
+      </div>
+      <div class="var-box var-T">
+        <div class="var-label">Thomas</div>
+        <div class="var-ex">Overhead triceps extension câble unilatéral</div>
+        <div class="var-detail">Un bras à la fois — bras gauche à sa limite</div>
+        <a href="https://www.youtube.com/results?search_query=overhead+triceps+extension+cable+rope+technique+single+arm" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement — extension triceps tête haute</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+      </div>
+    </div>
+    <div class="chips"><span class="chip cs">2 × 12–15</span><span class="chip ct">Tempo 2-1-2-0</span><span class="chip cr">Repos 75 sec</span></div>
+    <div class="ex-note">
+      <p>Câble réglé en position basse. Se tenir debout dos au câble, incliner légèrement le buste en avant, bras au-dessus de la tête, coudes pointés vers le haut. Pousser vers l'avant et en bas jusqu'à extension complète.</p>
+      <p><strong>Pourquoi cet exercice :</strong> Landin et al. 2017 (J Human Kinetics) — l'overhead extension étire la tête longue du triceps (le seul chef bi-articulaire) en position allongée, ce qui produit une activation supérieure de cette portion vs le pushdown de séance A. Les deux exercices sont donc complémentaires, pas redondants.</p>
+    </div>
+    <div class="muscles-line"><span class="rtag rtag-r">Triceps — tête longue (rappel 2×)</span></div>
+  </div>
+</div>
+
+
+<!-- ═══════════════ BILAN MUSCULAIRE ═══════════════ -->
+<div class="bilan">
+  <h3>Bilan musculaire — couverture hebdomadaire</h3>
+  <p class="bilan-sub">Zone optimale débutants : 10–15 sets/semaine par groupe · Schoenfeld, Ogborn & Krieger 2017 &nbsp;|&nbsp; A = Lundi · B = Jeudi · C = Vendredi</p>
+
+  <div class="bilan-row"><div class="bm">Pectoraux</div><div class="dots"><span class="dot dA">A</span><span class="dot d0">—</span><span class="dot dC">C</span></div><div class="freq-ok">2× · ~10 sets ✓</div></div>
+  <div class="bilan-row"><div class="bm">Grand dorsal</div><div class="dots"><span class="dot dA">A</span><span class="dot d0">—</span><span class="dot dC">C</span></div><div class="freq-ok">2× · ~11 sets ✓</div></div>
+  <div class="bilan-row"><div class="bm">Épaules (ant. + méd.)</div><div class="dots"><span class="dot dA">A</span><span class="dot d0">—</span><span class="dot d0">—</span></div><div class="freq-mid">1× · 6 sets — acceptable débutant (mois 1-3)</div></div>
+  <div class="bilan-row"><div class="bm">Deltoïde postérieur</div><div class="dots"><span class="dot d0">—</span><span class="dot d0">—</span><span class="dot dC">C</span></div><div class="freq-ok">1× · 6 sets ✓</div></div>
+  <div class="bilan-row"><div class="bm">Trapèze / Rhomboïdes</div><div class="dots"><span class="dot dA">A</span><span class="dot d0">—</span><span class="dot dC">C</span></div><div class="freq-ok">2× · ~9 sets ✓</div></div>
+  <div class="bilan-row"><div class="bm">Triceps</div><div class="dots"><span class="dot dA">A</span><span class="dot d0">—</span><span class="dot dC">C</span></div><div class="freq-ok">2× · ~10 sets ✓</div></div>
+  <div class="bilan-row"><div class="bm">Biceps</div><div class="dots"><span class="dot dA">A</span><span class="dot d0">—</span><span class="dot dC">C</span></div><div class="freq-ok">2× · ~10 sets ✓</div></div>
+  <div class="bilan-row"><div class="bm">Rotateurs ext. épaule</div><div class="dots"><span class="dot d0">—</span><span class="dot d0">—</span><span class="dot dC">C</span></div><div class="freq-ok">1× · prévention blessure ✓</div></div>
+  <div class="bilan-row"><div class="bm">Quadriceps</div><div class="dots"><span class="dot d0">—</span><span class="dot dB">B</span><span class="dot d0">—</span></div><div class="freq-ok">1× salle + 2-3 runs ✓</div></div>
+  <div class="bilan-row"><div class="bm">Grand fessier</div><div class="dots"><span class="dot d0">—</span><span class="dot dB">B</span><span class="dot d0">—</span></div><div class="freq-ok">1× · 2 exos dédiés ✓</div></div>
+  <div class="bilan-row"><div class="bm">Fessier moyen</div><div class="dots"><span class="dot d0">—</span><span class="dot dB">B</span><span class="dot d0">—</span></div><div class="freq-ok">1× · prévention genou coureur ✓</div></div>
+  <div class="bilan-row"><div class="bm">Ischios</div><div class="dots"><span class="dot d0">—</span><span class="dot dB">B</span><span class="dot d0">—</span></div><div class="freq-ok">1× salle + 2-3 runs ✓</div></div>
+  <div class="bilan-row"><div class="bm">Mollets</div><div class="dots"><span class="dot d0">—</span><span class="dot dB">B</span><span class="dot d0">—</span></div><div class="freq-ok">1× salle + 2-3 runs ✓</div></div>
+</div>
+
+
+<!-- ═══════════════ NUTRITION ═══════════════ -->
+<div class="nutri">
+  <h3>Recommandations nutritionnelles</h3>
+  <div class="nutri-grid">
+    <div class="nutri-card nutri-T">
+      <div class="nutri-name">Thomas</div>
+      <div class="nutri-row">Calories estimées <span class="nutri-val">2 200–2 400 kcal/j</span></div>
+      <div class="nutri-row">Protéines (corticoïdes · Reid & Moylan 2011) <span class="nutri-val">2,0–2,2 g/kg = 152–167 g/j</span></div>
+      <div class="nutri-row">Glucides <span class="nutri-val">45–55% des calories</span></div>
+      <div class="nutri-row">Lipides <span class="nutri-val">25–30% des calories</span></div>
+      <div class="nutri-row" style="font-size:11.5px;color:#900;margin-top:4px">⚕ Corticoïdes inhibent synthèse protéique (Minetto 2011) → priorité absolue aux protéines. Ne pas descendre sous 2000 kcal avec ces traitements.</div>
+    </div>
+    <div class="nutri-card nutri-R">
+      <div class="nutri-name">Renaud</div>
+      <div class="nutri-row">Calories estimées <span class="nutri-val">2 800–3 200 kcal/j</span></div>
+      <div class="nutri-row">Protéines (Morton et al. BJSM 2018) <span class="nutri-val">1,8–2,0 g/kg = 140–156 g/j</span></div>
+      <div class="nutri-row">Glucides <span class="nutri-val">50–55% (endurance background)</span></div>
+      <div class="nutri-row">Lipides <span class="nutri-val">25–30% des calories</span></div>
+      <div class="nutri-row" style="font-size:11.5px;color:#0050a0;margin-top:4px">Ectomorphe + marathon → TDEE élevé. Risque de déficit calorique sans le savoir. Commencer à peser les repas ou utiliser une app 2 semaines pour calibrer.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════ PROGRESSION ═══════════════ -->
+<div class="prog-wrap">
+  <h3>Double progression — règle universelle mise à jour 2026</h3>
+  <p style="font-size:12.5px;color:#666;margin-bottom:10px">Sources : Rhea et al. 2003 · Lasevicius et al. 2019 · Kassiano et al. 2022</p>
+  <div style="background:#f0fdf4;border-left:4px solid #2a9d5c;padding:11px 14px;border-radius:0 8px 8px 0;font-size:13px;color:#1a4a2a;margin-bottom:12px;line-height:1.7;">
+    <strong>Notion moderne — Reps en Réserve (RIR) :</strong><br>
+    Finir chaque série en ayant le sentiment que <strong>2 à 3 reps supplémentaires auraient été possibles mais difficiles</strong>.<br>
+    Pas trop facile (inutile) · Pas à l'échec complet (fatigue excessive, technique qui dégrade).<br>
+    <em>Kassiano et al. 2022 : "L'effort de proximité à l'échec prime sur la charge absolue pour l'hypertrophie."</em>
+  </div>
+  <table>
+    <tr><th>Séance</th><th>Charge</th><th>Reps réalisées</th><th>Action</th></tr>
+    <tr><td>S1</td><td>40 kg</td><td>12, 11, 10, 10</td><td style="color:#999">Pas encore</td></tr>
+    <tr><td>S2</td><td>40 kg</td><td>12, 12, 12, 11</td><td style="color:#999">Presque</td></tr>
+    <tr><td>S3</td><td>40 kg</td><td>12, 12, 12, 12</td><td class="ok">→ +2,5 kg à S4</td></tr>
+    <tr><td>S4</td><td>42,5 kg</td><td>12, 11, 10, 9</td><td style="color:#555">Nouveau cycle</td></tr>
+  </table>
+  <div class="callout cl-orange" style="margin-top:12px;">
+    <strong>Thomas — progression bras gauche :</strong> notez la charge ET les reps du bras gauche séparément du bras droit. La progression du bras gauche sera plus lente — c'est normal et attendu. Ne jamais augmenter la charge du bras gauche tant qu'il n'a pas atteint le nombre de reps cible sans douleur.
+  </div>
+</div>
+    </div>
+
+
+    <!-- TAB : SÉANCE MAISON -->
+    <div class="tab-pane" id="tab-home">
+      <div style="padding:20px;max-width:760px;margin:0 auto;">
+
+        <div class="prog-title">Séance Maison</div>
+        <p class="prog-sub">Core · Abdominaux · Mobilité · Souplesse — Sans matériel · ~35-40 min</p>
+        <p class="prog-sources">Sources : McGill 2010 (JSCR) · Escamilla et al. 2010 (JOSPT) · Contreras & Schoenfeld 2011 (S&CJ) · Wilk et al. 2009 (JOSPT) · McClure et al. 2007 (PT) · Behm & Chaouachi 2011 (EJAP) · Moreside & McGill 2012 (JSCR) · Cook et al. 2010 (Movement) · Bandy & Irion 1994 (PT) · Witvrouw et al. 2004 (AJSM)</p>
+
+        <div class="callout cl-green">
+          <strong>Fréquence recommandée :</strong> 2 à 3 fois par semaine — idéalement le mercredi (repos) et le dimanche. Peut se faire le soir avant de dormir, aucun matériel nécessaire. Behm & Chaouachi 2011 : la flexibilité s'améliore significativement en 6 à 8 semaines avec 2-3 séances/semaine régulières.
         </div>
-        <div>
-          <label>Charge</label>
-          <input type="text" id="logLoad" placeholder="12 kg">
+
+        <div class="callout cl-red">
+          <strong>⚕ Thomas — épaule gauche :</strong> les étirements passifs du programme sont SÛRS (pas de contraction active, pas de charge). Le sleeper stretch et le cross-body stretch côté gauche : commencer avec une amplitude réduite de 50%, augmenter progressivement sur plusieurs semaines. Arrêt immédiat si douleur vasculaire (différente de la sensation de tension musculaire normale de l'étirement).
         </div>
-      </div>
-      <div class="form-row">
-        <label>RPE (effort perçu)</label>
-        <div class="rpe-scale" id="rpeScale">
-          <button class="rpe-btn" data-val="1">1</button>
-          <button class="rpe-btn" data-val="2">2</button>
-          <button class="rpe-btn" data-val="3">3</button>
-          <button class="rpe-btn" data-val="4">4</button>
-          <button class="rpe-btn" data-val="5">5</button>
-          <button class="rpe-btn" data-val="6">6</button>
-          <button class="rpe-btn" data-val="7">7</button>
-          <button class="rpe-btn" data-val="8">8</button>
-          <button class="rpe-btn" data-val="9">9</button>
-          <button class="rpe-btn" data-val="10">10</button>
+
+        <div style="background:#f8f8ff;border:1px solid #d0d8ff;border-radius:8px;padding:12px 15px;font-size:12.5px;color:#2030a0;line-height:1.7;margin-bottom:20px;">
+          <strong>Ordre validé par McGill 2010 + Behm 2011 :</strong> Core en premier (muscles frais = meilleure activation neuromusculaire) → Mobilité dynamique → Étirements statiques en dernier. Les étirements statiques AVANT l'effort réduisent la force musculaire de 5-8% (Behm 2011) — c'est pourquoi ils sont toujours placés à la fin.
         </div>
-      </div>
-      <div class="form-row">
-        <label>Note (ressenti, bras gauche, technique…)</label>
-        <textarea id="logNote" placeholder="Optionnel"></textarea>
-      </div>
-      <button class="btn primary full" onclick="saveLog()">Enregistrer</button>
-    </div>
 
-    <h4>Historique</h4>
-    <div id="logHistory"></div>
-  </section>
+        <!-- ═══════════ BLOC 1 — CORE ═══════════ -->
+        <div class="seance">
+          <div class="s-head" style="background:linear-gradient(135deg,#f5f0ff,#ede8ff);">
+            <h2 style="color:#5020a0;">Bloc 1 — Core &amp; Abdominaux · ~18 min</h2>
+            <div class="s-dur">Rectus abdominis · Obliques · Transverse · Érecteurs spinaux</div>
+            <div class="mbar">
+              <span class="mt" style="background:#ede8ff;color:#5020a0;border-color:#c0b0f8;">Abdominaux</span>
+              <span class="mt" style="background:#ede8ff;color:#5020a0;border-color:#c0b0f8;">Obliques</span>
+              <span class="mt" style="background:#ede8ff;color:#5020a0;border-color:#c0b0f8;">Gainage profond</span>
+              <span class="mt" style="background:#ede8ff;color:#5020a0;border-color:#c0b0f8;">Érecteurs</span>
+            </div>
+          </div>
 
-  <!-- ============ TIMER ============ -->
-  <section id="tab-timer" class="tab-content">
-    <h2><span class="num">03</span> Timer</h2>
-    <p class="subtitle">Repos · EMOM · AMRAP</p>
+          <div class="sci">
+            <strong>McGill 2010 (JSCR) :</strong> les 3 exercices "Big 3" créent une activation maximale du core avec une charge minimale sur les disques lombaires. Contreras & Schoenfeld 2011 : le core training améliore l'économie de course de 2 à 5% chez les coureurs récréatifs — pertinent directement pour Thomas et Renaud.
+          </div>
 
-    <div class="timer-modes">
-      <button class="timer-mode-btn active" data-tmode="rest">Repos</button>
-      <button class="timer-mode-btn" data-tmode="emom">EMOM</button>
-      <button class="timer-mode-btn" data-tmode="amrap">AMRAP</button>
-    </div>
+          <div class="bloc">Exercice 1 — Gainage profond (transverse + stabilisation)</div>
+          <div class="ex">
+            <div class="ex-head">
+              <div class="ex-left">
+                <div class="ex-num">Exercice 1</div>
+                <div class="ex-name">Dead Bug (cafard mort)</div>
+              </div>
+            </div>
+            <div class="chips">
+              <span class="chip cs">3 × 8 reps/côté</span>
+              <span class="chip ct">Tempo lent et contrôlé</span>
+              <span class="chip cr">Repos 45 sec</span>
+            </div>
+            <div class="ex-note">
+              <p><strong>Position :</strong> allongé sur le dos, bras tendus vers le plafond, hanches et genoux à 90°. Dos plaqué contre le sol — c'est la clé.</p>
+              <p><strong>Mouvement :</strong> descendre simultanément le bras droit ET la jambe gauche vers le sol (sans y toucher), revenir. Alterner. Le bas du dos ne doit PAS se creuser ni décoller.</p>
+              <p><strong>Pourquoi :</strong> McGill 2010 — le dead bug active le transverse de l'abdomen (gainage profond) sans flexion lombaire, contrairement au crunch classique. C'est l'exercice de référence pour la stabilisation lombopelvienne.</p>
+            </div>
+            <div class="muscles-line"><span class="rtag rtag-m">Transverse</span><span class="rtag">Rectus abdominis</span><span class="rtag">Iliopsoas</span></div>
+            <a href="https://www.youtube.com/results?search_query=dead+bug+exercise+technique+core+tutorial" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement — Dead Bug</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+          </div>
 
-    <div class="timer-display">
-      <div class="timer-mode" id="tDisplayMode">Repos</div>
-      <div class="timer-time" id="tDisplay">00:00</div>
-      <div class="timer-meta" id="tMeta"></div>
-    </div>
+          <div class="bloc">Exercice 2 — Abdominaux (rectus abdominis)</div>
+          <div class="ex">
+            <div class="ex-head">
+              <div class="ex-left">
+                <div class="ex-num">Exercice 2</div>
+                <div class="ex-name">Curl-up modifié (McGill curl-up)</div>
+              </div>
+            </div>
+            <div class="chips">
+              <span class="chip cs">3 × 10–15 reps</span>
+              <span class="chip ct">Tempo 2-1-2-0</span>
+              <span class="chip cr">Repos 45 sec</span>
+            </div>
+            <div class="ex-note">
+              <p><strong>Position :</strong> allongé sur le dos, UNE jambe tendue, l'autre pliée. Mains glissées sous le bas du dos pour maintenir la courbure lombaire naturelle.</p>
+              <p><strong>Mouvement :</strong> soulever SEULEMENT la tête et les épaules du sol (amplitude limitée — 10 à 15 cm maximum). Ne pas attraper la nuque avec les mains. Tenir 1s en haut.</p>
+              <p><strong>Pourquoi pas le crunch classique :</strong> Lee & McGill 2015 — la flexion lombaire répétée du crunch standard crée des microtraumatismes sur les disques L4-L5. Ce curl-up modifié maintient la lordose = activation abdominale maximale sans stress discal.</p>
+            </div>
+            <div class="muscles-line"><span class="rtag rtag-m">Rectus abdominis</span><span class="rtag">Obliques (partiellement)</span></div>
+            <a href="https://www.youtube.com/results?search_query=mcgill+curl+up+abdominal+technique+tutorial" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement — McGill Curl-Up</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+          </div>
 
-    <div id="presetWrap">
-      <h4>Presets repos</h4>
-      <div class="preset-grid">
-        <button class="preset-btn" onclick="setRest(30)">0:30</button>
-        <button class="preset-btn" onclick="setRest(45)">0:45</button>
-        <button class="preset-btn" onclick="setRest(60)">1:00</button>
-        <button class="preset-btn" onclick="setRest(90)">1:30</button>
-        <button class="preset-btn" onclick="setRest(120)">2:00</button>
-        <button class="preset-btn" onclick="setRest(150)">2:30</button>
-        <button class="preset-btn" onclick="setRest(180)">3:00</button>
-        <button class="preset-btn" onclick="setRest(240)">4:00</button>
-      </div>
-    </div>
+          <div class="bloc">Exercice 3 — Obliques + carré des lombes</div>
+          <div class="ex">
+            <div class="ex-head">
+              <div class="ex-left">
+                <div class="ex-num">Exercice 3</div>
+                <div class="ex-name">Side Plank (planche latérale)</div>
+              </div>
+            </div>
+            <div class="chips">
+              <span class="chip cs">3 × 20–40 sec / côté</span>
+              <span class="chip ct">Position statique</span>
+              <span class="chip cr">Repos 45 sec</span>
+            </div>
+            <div class="ex-note">
+              <p><strong>Position débutant :</strong> appui sur le coude et le genou (genou au sol). Corps aligné de la tête aux genoux. Hanche qui ne s'affaisse pas.</p>
+              <p><strong>Position avancée :</strong> appui coude + pied. Corps aligné de la tête aux pieds.</p>
+              <p><strong>Progression :</strong> commencer à 20 secondes. Augmenter de 5 secondes par semaine jusqu'à 40-45 secondes. Au-delà : ajouter un mouvement (soulever la hanche).</p>
+              <p><strong>Pourquoi :</strong> McGill 2010 — le side plank est l'exercice le plus efficace pour les obliques et le carré des lombes avec la charge lombaire la plus faible de tous les exercices de core.</p>
+            </div>
+            <div class="muscles-line"><span class="rtag rtag-m">Obliques</span><span class="rtag rtag-m">Carré des lombes</span><span class="rtag">Fessier moyen</span></div>
+            <a href="https://www.youtube.com/results?search_query=side+plank+technique+obliques+tutorial+beginner" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement — Side Plank</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+          </div>
 
-    <div id="emomConfig" style="display:none">
-      <div class="timer-config">
-        <div class="form-row" style="margin:0">
-          <label>Tours</label>
-          <input type="number" id="emomRounds" value="10" min="1" max="60">
+          <div class="bloc">Exercice 4 — Érecteurs spinaux + gainage intégré</div>
+          <div class="ex">
+            <div class="ex-head">
+              <div class="ex-left">
+                <div class="ex-num">Exercice 4</div>
+                <div class="ex-name">Bird-Dog (chien-oiseau)</div>
+              </div>
+            </div>
+            <div class="chips">
+              <span class="chip cs">3 × 8 reps / côté</span>
+              <span class="chip ct">Tempo lent · Tenir 3 sec en haut</span>
+              <span class="chip cr">Repos 45 sec</span>
+            </div>
+            <div class="ex-note">
+              <p><strong>Position :</strong> à quatre pattes, dos plat, regard vers le sol. Hanches à la verticale des genoux, épaules à la verticale des mains.</p>
+              <p><strong>Mouvement :</strong> tendre simultanément le bras droit ET la jambe gauche horizontalement. Tenir 3 secondes. Revenir sans poser. Alterner. Le bassin ne doit PAS tourner.</p>
+              <p><strong>Signe de bonne exécution :</strong> vous pouvez poser un verre d'eau sur votre bas du dos sans qu'il tombe.</p>
+              <p><strong>Pourquoi :</strong> McGill 2010 — le bird-dog active simultanément les érecteurs spinaux, les multifides (stabilisateurs profonds de la colonne) et le fessier, sans aucun stress lombaire en flexion.</p>
+            </div>
+            <div class="muscles-line"><span class="rtag rtag-m">Érecteurs spinaux</span><span class="rtag rtag-m">Multifides</span><span class="rtag">Fessier</span><span class="rtag">Deltoïde (bras tendu)</span></div>
+            <a href="https://www.youtube.com/results?search_query=bird+dog+exercise+technique+core+tutorial" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement — Bird-Dog</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+          </div>
         </div>
-        <div class="form-row" style="margin:0">
-          <label>Minutes/tour</label>
-          <input type="number" id="emomMin" value="1" min="1" max="5">
+
+        <!-- ═══════════ BLOC 2 — MOBILITÉ ÉPAULES ═══════════ -->
+        <div class="seance">
+          <div class="s-head" style="background:linear-gradient(135deg,#fff0f3,#ffe4ec);">
+            <h2 style="color:#a00020;">Bloc 2 — Mobilité Épaules · ~12 min</h2>
+            <div class="s-dur">Capsule postérieure · Pectoraux · Rotation thoracique · Bras dans le dos</div>
+            <div class="mbar">
+              <span class="mt mt-r">Capsule postérieure</span>
+              <span class="mt mt-r">Grand dorsal</span>
+              <span class="mt mt-r">Pectoraux</span>
+              <span class="mt mt-r">Rotation externe</span>
+            </div>
+          </div>
+
+          <div class="sci">
+            <strong>Wilk et al. 2009 (JOSPT) :</strong> le sleeper stretch est l'étirement le plus efficace pour la capsule postérieure de l'épaule — améliore la rotation interne de 15 à 20° en 6 semaines. C'est précisément ce qui limite le mouvement "bras dans le dos". McClure et al. 2007 (Physical Therapy) : le cross-body stretch complète ce travail en ciblant le deltoïde postérieur.
+          </div>
+
+          <div class="bloc">Exercice 1 — Capsule postérieure (le principal limitant du bras dans le dos)</div>
+          <div class="ex">
+            <div class="ex-head">
+              <div class="ex-left">
+                <div class="ex-num">Exercice 1</div>
+                <div class="ex-name">Sleeper Stretch (étirement en décubitus latéral)</div>
+              </div>
+            </div>
+            <div class="chips">
+              <span class="chip cs">2 × 45 sec / côté</span>
+              <span class="chip ct">Statique · Pas de douleur</span>
+              <span class="chip cr">Repos 30 sec</span>
+            </div>
+            <div class="ex-note">
+              <p><strong>Position :</strong> allongé sur le côté, l'épaule à étirer en dessous. Bras tendu à 90° devant vous à hauteur d'épaule, coude plié à 90°. La tête repose sur un oreiller.</p>
+              <p><strong>Mouvement :</strong> avec l'autre main, pousser doucement le poignet vers le bas (vers le sol), comme si vous vouliez "tourner la main vers l'intérieur". Tenir 45 secondes. Tension de 5-6/10, jamais douleur.</p>
+              <p><strong>Thomas :</strong> côté gauche — commencer avec une pression très légère (3-4/10). La capsule articulaire est étirée passivement, pas de contraction musculaire active, donc sûr pour la circulation.</p>
+              <p><strong>Pourquoi :</strong> Wilk 2009 — la capsule postérieure de l'épaule est la structure qui limite physiquement le mouvement "bras dans le dos". Cet étirement la cible directement.</p>
+            </div>
+            <div class="muscles-line"><span class="rtag rtag-m">Capsule postérieure épaule</span><span class="rtag">Infra-épineux</span><span class="rtag">Petit rond</span></div>
+            <a href="https://www.youtube.com/results?search_query=sleeper+stretch+shoulder+posterior+capsule+technique" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement — Sleeper Stretch</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+          </div>
+
+          <div class="bloc">Exercice 2 — Deltoïde postérieur + capsule</div>
+          <div class="ex">
+            <div class="ex-head">
+              <div class="ex-left">
+                <div class="ex-num">Exercice 2</div>
+                <div class="ex-name">Cross-Body Stretch (bras croisé devant la poitrine)</div>
+              </div>
+            </div>
+            <div class="chips">
+              <span class="chip cs">2 × 45 sec / côté</span>
+              <span class="chip ct">Statique · Tension légère</span>
+              <span class="chip cr">Repos 20 sec</span>
+            </div>
+            <div class="ex-note">
+              <p><strong>Position :</strong> debout. Ramener un bras tendu horizontalement devant la poitrine. Avec l'autre bras, attraper le coude et tirer doucement vers vous jusqu'à sentir l'étirement à l'arrière de l'épaule.</p>
+              <p><strong>Mouvement :</strong> position statique. Épaule basse, pas de haussement. 45 secondes. Alterner les côtés.</p>
+              <p><strong>Pourquoi :</strong> McClure 2007 — complément du sleeper stretch, cible le deltoïde postérieur et la portion supérieure de la capsule. Les deux ensemble couvrent l'intégralité de la restriction "bras dans le dos".</p>
+            </div>
+            <div class="muscles-line"><span class="rtag rtag-m">Deltoïde postérieur</span><span class="rtag">Capsule postérieure</span><span class="rtag">Rhomboïdes</span></div>
+            <a href="https://www.youtube.com/results?search_query=cross+body+shoulder+stretch+posterior+deltoid+technique" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement — Cross-Body Stretch</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+          </div>
+
+          <div class="bloc">Exercice 3 — Pectoraux (limitent l'extension et la rotation externe)</div>
+          <div class="ex">
+            <div class="ex-head">
+              <div class="ex-left">
+                <div class="ex-num">Exercice 3</div>
+                <div class="ex-name">Pec Stretch au cadre de porte (Doorway Stretch)</div>
+              </div>
+            </div>
+            <div class="chips">
+              <span class="chip cs">2 × 45 sec / position</span>
+              <span class="chip ct">Statique · 2 hauteurs de bras</span>
+              <span class="chip cr">Repos 20 sec</span>
+            </div>
+            <div class="ex-note">
+              <p><strong>Position 1 (pec inférieur) :</strong> bras à 90° du corps (croix), avant-bras plaqué contre le cadre de porte, faire un pas en avant avec une jambe. Tenir 45s.</p>
+              <p><strong>Position 2 (pec supérieur) :</strong> même chose mais bras levé à 120° (légèrement au-dessus de l'horizontal). Tenir 45s.</p>
+              <p><strong>Thomas :</strong> côté gauche, étirement passif uniquement. Ne pas forcer.</p>
+              <p><strong>Pourquoi :</strong> Kendall 2005 — les pectoraux raides limitent la capacité à mettre le bras en arrière en rotation externe. Cet étirement à deux angles couvre les deux chefs (sternal et claviculaire).</p>
+            </div>
+            <div class="muscles-line"><span class="rtag rtag-m">Pectoraux (chef sternal + claviculaire)</span><span class="rtag">Deltoïde antérieur</span></div>
+            <a href="https://www.youtube.com/results?search_query=doorway+chest+stretch+pec+flexibility+technique" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement — Doorway Pec Stretch</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+          </div>
+
+          <div class="bloc">Exercice 4 — Rotation thoracique (mobilité globale haut du dos)</div>
+          <div class="ex">
+            <div class="ex-head">
+              <div class="ex-left">
+                <div class="ex-num">Exercice 4</div>
+                <div class="ex-name">Thread the Needle (aiguille enfilée)</div>
+              </div>
+            </div>
+            <div class="chips">
+              <span class="chip cs">2 × 10 reps / côté</span>
+              <span class="chip ct">Dynamique · Lent et contrôlé</span>
+              <span class="chip cr">Repos 20 sec</span>
+            </div>
+            <div class="ex-note">
+              <p><strong>Position :</strong> à quatre pattes, dos plat. Une main derrière la tête (coude ouvert).</p>
+              <p><strong>Mouvement :</strong> faire passer le coude sous le corps en "enfilant" le bras comme une aiguille, jusqu'à toucher le sol avec l'épaule. Revenir en ouvrant le coude vers le plafond. Suivre le mouvement avec les yeux.</p>
+              <p><strong>Pourquoi :</strong> Cook 2010 (Movement) — la rigidité thoracique est l'une des causes principales de la limitation de mobilité des épaules. La colonne thoracique doit tourner pour que l'épaule puisse aller complètement en arrière.</p>
+            </div>
+            <div class="muscles-line"><span class="rtag rtag-m">Colonne thoracique (rotation)</span><span class="rtag">Grand dorsal</span><span class="rtag">Capsule épaule</span></div>
+            <a href="https://www.youtube.com/results?search_query=thread+needle+thoracic+rotation+mobility+exercise" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement — Thread the Needle</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+          </div>
+
+          <div class="bloc">Exercice 5 — Grand dorsal (limite l'élévation et la rotation externe)</div>
+          <div class="ex">
+            <div class="ex-head">
+              <div class="ex-left">
+                <div class="ex-num">Exercice 5</div>
+                <div class="ex-name">Lat Stretch contre mur (étirement grand dorsal)</div>
+              </div>
+            </div>
+            <div class="chips">
+              <span class="chip cs">2 × 45 sec / côté</span>
+              <span class="chip ct">Statique</span>
+              <span class="chip cr">Repos 20 sec</span>
+            </div>
+            <div class="ex-note">
+              <p><strong>Position :</strong> debout face à un mur à bout de bras. Placer une main contre le mur à hauteur d'épaule. Faire pivoter le corps vers l'extérieur (s'éloigner du mur en tournant) jusqu'à sentir l'étirement sur le côté du dos et sous l'aisselle.</p>
+              <p><strong>Alternative :</strong> s'accrocher à un poteau ou cadre de porte d'une seule main, plier légèrement les genoux et se laisser descendre pour créer une traction vers le bas et l'extérieur.</p>
+              <p><strong>Pourquoi :</strong> Kendall 2005 — le grand dorsal est le muscle qui "tire" le bras vers le bas et vers l'intérieur. S'il est raide, il empêche physiquement le bras de monter en arrière et en rotation externe.</p>
+            </div>
+            <div class="muscles-line"><span class="rtag rtag-m">Grand dorsal</span><span class="rtag">Grand rond</span><span class="rtag">Triceps chef long</span></div>
+            <a href="https://www.youtube.com/results?search_query=lat+stretch+wall+flexibility+shoulder+mobility+tutorial" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement — Lat Stretch</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <div id="amrapConfig" style="display:none">
-      <div class="form-row">
-        <label>Durée totale (min)</label>
-        <input type="number" id="amrapDuration" value="10" min="1" max="60">
-      </div>
-    </div>
+        <!-- ═══════════ BLOC 3 — MOBILITÉ HANCHE & GENOUX ═══════════ -->
+        <div class="seance">
+          <div class="s-head" style="background:linear-gradient(135deg,#f0fdf4,#e0f8ec);">
+            <h2 style="color:#006030;">Bloc 3 — Mobilité Hanche &amp; Genoux · ~12 min</h2>
+            <div class="s-dur">Rotation interne/externe hanche · Fléchisseurs · Adducteurs · Chaîne postérieure</div>
+            <div class="mbar">
+              <span class="mt mt-v">Hanche (rot. int/ext)</span>
+              <span class="mt mt-v">Psoas-iliaque</span>
+              <span class="mt mt-v">Adducteurs</span>
+              <span class="mt mt-v">Ischios</span>
+              <span class="mt mt-v">Cheville</span>
+            </div>
+          </div>
 
-    <div class="timer-controls">
-      <button class="btn primary" id="timerStartBtn" onclick="timerToggle()">Start</button>
-      <button class="btn" onclick="timerReset()">Reset</button>
-    </div>
-  </section>
+          <div class="sci">
+            <strong>Cook et al. 2010 (Movement) :</strong> la mobilité de hanche est le facteur n°1 de performance et de prévention des blessures chez les coureurs. Moreside & McGill 2012 (JSCR) : un programme de 6 semaines d'étirements de hanche produit +20° d'amplitude de rotation. Hoge et al. 2010 (JSCR) : les fléchisseurs de hanche sont raccourcis chez la majorité des coureurs à pied — conséquence directe des kilomètres accumulés.
+          </div>
 
-  <!-- ============ TEST BRAS GAUCHE ============ -->
-  <section id="tab-test" class="tab-content">
-    <h2><span class="num">04</span> Bras gauche</h2>
-    <p class="subtitle">Tests hebdo · suivi rémission</p>
+          <div class="bloc">Exercice 1 — Rotation interne ET externe hanche simultanément</div>
+          <div class="ex">
+            <div class="ex-head">
+              <div class="ex-left">
+                <div class="ex-num">Exercice 1</div>
+                <div class="ex-name">90/90 Hip Stretch</div>
+              </div>
+            </div>
+            <div class="chips">
+              <span class="chip cs">2 × 45 sec / côté</span>
+              <span class="chip ct">Statique + léger balancement</span>
+              <span class="chip cr">Repos 20 sec</span>
+            </div>
+            <div class="ex-note">
+              <p><strong>Position :</strong> assis au sol. Jambe avant pliée à 90° devant vous. Jambe arrière pliée à 90° sur le côté. Les deux tibias font un angle droit avec les cuisses. Le genou arrière est au sol.</p>
+              <p><strong>Mouvement :</strong> pencher doucement le buste vers la jambe avant, maintenir 45 sec. Puis changer de côté.</p>
+              <p><strong>La jambe avant travaille en rotation externe, la jambe arrière en rotation interne</strong> — un seul exercice qui couvre les deux déficits les plus fréquents.</p>
+              <p><strong>Pourquoi :</strong> Cook 2010 — le 90/90 est reconnu comme l'exercice de mobilité hanche le plus complet. Il cible les deux restrictions principales de la hanche en une seule position.</p>
+            </div>
+            <div class="muscles-line"><span class="rtag rtag-m">Rotation ext. hanche (piriformis, obturateurs)</span><span class="rtag rtag-m">Rotation int. hanche (TFL, fessier moyen)</span></div>
+            <a href="https://www.youtube.com/results?search_query=90+90+hip+stretch+mobility+technique+tutorial" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement — 90/90 Hip Stretch</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+          </div>
 
-    <div class="warning-banner">
-      <strong>Protocole</strong>
-      <p>Une fois par semaine, même jour, même moment de la journée (matin frais conseillé). Échauffe 5 min avant. Stoppe au moindre signe inhabituel.</p>
-    </div>
+          <div class="bloc">Exercice 2 — Fléchisseurs de hanche (psoas-iliaque) · très important pour coureurs</div>
+          <div class="ex">
+            <div class="ex-head">
+              <div class="ex-left">
+                <div class="ex-num">Exercice 2</div>
+                <div class="ex-name">Hip Flexor Stretch en demi-fente (Kneeling Lunge Stretch)</div>
+              </div>
+            </div>
+            <div class="chips">
+              <span class="chip cs">2 × 45 sec / côté</span>
+              <span class="chip ct">Statique · Bassin neutre</span>
+              <span class="chip cr">Repos 20 sec</span>
+            </div>
+            <div class="ex-note">
+              <p><strong>Position :</strong> un genou au sol (mettre un coussin dessous), l'autre pied devant, genou à 90°. Dos droit.</p>
+              <p><strong>Mouvement :</strong> avancer doucement les hanches vers l'avant jusqu'à sentir l'étirement à l'avant de la cuisse et du bas du ventre côté du genou au sol. Contracter légèrement les fessiers pour intensifier.</p>
+              <p><strong>IMPORTANT :</strong> le bassin ne doit pas basculer en avant (cambrure lombaire excessive). Renter le nombril légèrement.</p>
+              <p><strong>Pourquoi prioritaire pour Thomas et Renaud :</strong> Hoge 2010 — les fléchisseurs de hanche raccourcis par la course créent un antéversion du bassin, ce qui augmente le stress lombaire à la course ET limite les performances en musculation sur leg press et hip thrust.</p>
+            </div>
+            <div class="muscles-line"><span class="rtag rtag-m">Psoas-iliaque</span><span class="rtag">Droit fémoral (quadriceps)</span><span class="rtag">TFL</span></div>
+            <a href="https://www.youtube.com/results?search_query=hip+flexor+stretch+kneeling+lunge+technique+tutorial" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement — Hip Flexor Stretch</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+          </div>
 
-    <div class="test-grid">
-      <div class="test-row">
-        <label>Tension artérielle (différence Bras D vs Bras G)</label>
-        <div class="row-flex">
-          <input type="number" id="testTA" placeholder="Ex: 15">
-          <span class="unit">mmHg</span>
+          <div class="bloc">Exercice 3 — Adducteurs + ouverture hanche</div>
+          <div class="ex">
+            <div class="ex-head">
+              <div class="ex-left">
+                <div class="ex-num">Exercice 3</div>
+                <div class="ex-name">Frog Stretch (grenouille)</div>
+              </div>
+            </div>
+            <div class="chips">
+              <span class="chip cs">2 × 60 sec</span>
+              <span class="chip ct">Statique progressif</span>
+              <span class="chip cr">Repos 20 sec</span>
+            </div>
+            <div class="ex-note">
+              <p><strong>Position :</strong> à quatre pattes. Écarter progressivement les genoux vers les côtés jusqu'à sentir un étirement dans l'aine et l'intérieur des cuisses. Les pieds s'écartent avec les genoux (chevilles dans l'axe des genoux).</p>
+              <p><strong>Mouvement :</strong> s'installer dans la position et laisser la gravité faire le travail. Légèrement se balancer avant/arrière pour explorer différentes zones.</p>
+              <p><strong>Pourquoi :</strong> Moreside & McGill 2012 — le frog stretch est l'un des étirements les plus efficaces pour les adducteurs et la rotation externe de hanche, avec une progressivité naturelle selon l'amplitude.</p>
+            </div>
+            <div class="muscles-line"><span class="rtag rtag-m">Adducteurs</span><span class="rtag rtag-m">Rotation ext. hanche</span><span class="rtag">Plancher pelvien</span></div>
+            <a href="https://www.youtube.com/results?search_query=frog+stretch+hip+mobility+adductors+technique" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement — Frog Stretch</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+          </div>
+
+          <div class="bloc">Exercice 4 — Ischios-jambiers (mobilité genou + course)</div>
+          <div class="ex">
+            <div class="ex-head">
+              <div class="ex-left">
+                <div class="ex-num">Exercice 4</div>
+                <div class="ex-name">Lying Hamstring Stretch (étirement ischios allongé)</div>
+              </div>
+            </div>
+            <div class="chips">
+              <span class="chip cs">2 × 45 sec / jambe</span>
+              <span class="chip ct">Statique · Genou légèrement fléchi</span>
+              <span class="chip cr">Repos 20 sec</span>
+            </div>
+            <div class="ex-note">
+              <p><strong>Position :</strong> allongé sur le dos. Soulever une jambe, attraper derrière la cuisse (pas le mollet). Tirer doucement vers vous jusqu'à sentir l'étirement à l'arrière de la cuisse.</p>
+              <p><strong>Important :</strong> garder le genou légèrement fléchi (pas totalement tendu) — Bandy & Irion 1994 : un léger fléchi réduit le risque de sollicitation du nerf sciatique.</p>
+              <p><strong>Pourquoi :</strong> Witvrouw 2004 — les ischios raides sont directement liés au syndrome fémoro-patellaire (douleur genou) chez les coureurs. Bandy & Irion 1994 : 45 secondes est la durée optimale pour un gain d'amplitude réel sur les ischios.</p>
+            </div>
+            <div class="muscles-line"><span class="rtag rtag-m">Ischios-jambiers</span><span class="rtag">Nerf sciatique (mobilisation douce)</span></div>
+            <a href="https://www.youtube.com/results?search_query=lying+hamstring+stretch+technique+flexibility+tutorial" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement — Hamstring Stretch</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+          </div>
+
+          <div class="bloc">Exercice 5 — Mobilité cheville (dorsiflexion · crucial pour coureurs)</div>
+          <div class="ex">
+            <div class="ex-head">
+              <div class="ex-left">
+                <div class="ex-num">Exercice 5</div>
+                <div class="ex-name">Ankle Mobility contre le mur (Knee to Wall)</div>
+              </div>
+            </div>
+            <div class="chips">
+              <span class="chip cs">2 × 10 reps / cheville</span>
+              <span class="chip ct">Dynamique · Lent et contrôlé</span>
+              <span class="chip cr">Repos 20 sec</span>
+            </div>
+            <div class="ex-note">
+              <p><strong>Position :</strong> debout face à un mur, un pied à environ 10 cm du mur. L'autre pied en arrière pour l'équilibre.</p>
+              <p><strong>Mouvement :</strong> plier le genou vers l'avant jusqu'à toucher le mur avec le genou (sans lever le talon). Reculer le pied jusqu'à ce que vous ne puissiez plus toucher le mur — c'est votre limite actuelle. Travailler à cette limite.</p>
+              <p><strong>Pourquoi :</strong> Cook 2010 — la restriction de dorsiflexion de cheville est la limitation articulaire la plus fréquente et la plus impactante chez les coureurs. Elle force une compensation au genou et à la hanche à chaque foulée.</p>
+            </div>
+            <div class="muscles-line"><span class="rtag rtag-m">Capsule articulaire cheville</span><span class="rtag">Soléaire</span><span class="rtag">Tibial postérieur</span></div>
+            <a href="https://www.youtube.com/results?search_query=ankle+mobility+knee+to+wall+dorsiflexion+technique" target="_blank" rel="noopener" class="vid-btn"><svg viewBox="0 0 24 24"><path d="M23.5 6.2s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.7 2 12 2 12 2s-4.7 0-7.3.1c-.6.1-1.9.1-3 1.3C.8 4.2.5 6.2.5 6.2S.2 8.5.2 10.8v2.1c0 2.3.3 4.6.3 4.6s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.2 21.7 12 21.8 12 21.8s4.7 0 7.3-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.6v-2.1c0-2.3-.3-4.6-.3-4.6zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>▶ Voir le mouvement — Ankle Mobility</a>
+<div class="vid-note">↑ Ouvre une recherche YouTube — choisis une vidéo avec sous-titres ou commentaires clairs</div>
+          </div>
         </div>
-      </div>
-      <div class="test-row">
-        <label>Farmer carry main gauche (KB 12 kg)</label>
-        <div class="row-flex">
-          <input type="number" id="testCarry" placeholder="Distance ou temps">
-          <span class="unit">m ou s</span>
+
+        <!-- SOURCES COMPLÈTES -->
+        <div class="prog-wrap">
+          <h3>Bases scientifiques de cette séance</h3>
+          <p style="font-size:12px;color:#666;line-height:1.8;margin-top:8px;">
+            <strong>Core :</strong> McGill S.M. 2010 — "Core training: evidence translating to better performance and injury prevention" · J Strength Cond Res<br>
+            Escamilla et al. 2010 — "Core muscle activation during Swiss ball and traditional abdominal exercises" · J Orthopaedic Sports PT<br>
+            Contreras & Schoenfeld 2011 — "To crunch or not to crunch" · Strength & Conditioning Journal<br>
+            Lee B.C. & McGill S.M. 2015 — "Effect of short-term isometric training on core/torso stiffness" · J Strength Cond Res<br><br>
+            <strong>Épaules :</strong> Wilk et al. 2009 — "Glenohumeral internal rotation deficit" · J Orthopaedic Sports PT<br>
+            McClure et al. 2007 — "A randomized controlled comparison of stretching procedures for posterior shoulder tightness" · Physical Therapy<br>
+            Kendall et al. 2005 — "Muscles: Testing and Function with Posture and Pain" · Lippincott Williams<br>
+            Cook G. 2010 — "Movement: Functional Movement Systems" · On Target Publications<br><br>
+            <strong>Hanche / Genoux :</strong> Hoge et al. 2010 — "Acute effects of hip flexor stretching on sprint start performance" · J Strength Cond Res<br>
+            Moreside J.M. & McGill S.M. 2012 — "Hip joint range of motion improvements using three different training modalities" · J Strength Cond Res<br>
+            Witvrouw et al. 2004 — "Muscle flexibility as a risk factor for patellofemoral pain syndrome" · American J Sports Medicine<br>
+            Bandy & Irion 1994 — "The effect of time on static stretch on the flexibility of the hamstring muscles" · Physical Therapy<br>
+            Behm & Chaouachi 2011 — "A review of the acute effects of static and dynamic stretching on performance" · European J Applied Physiology
+          </p>
         </div>
-      </div>
-      <div class="test-row">
-        <label>Goblet squat tenue bras gauche (10 kg max)</label>
-        <div class="row-flex">
-          <input type="number" id="testGoblet" placeholder="Reps">
-          <span class="unit">reps</span>
-        </div>
-      </div>
-      <div class="test-row">
-        <label>Pompes appui gauche seul (genoux OK)</label>
-        <div class="row-flex">
-          <input type="number" id="testPush" placeholder="Reps">
-          <span class="unit">reps</span>
-        </div>
-      </div>
-      <div class="test-row">
-        <label>RPE moyen ressenti bras gauche cette semaine</label>
-        <div class="row-flex">
-          <input type="number" id="testRpe" placeholder="1-10" min="1" max="10">
-          <span class="unit">/10</span>
-        </div>
+
       </div>
     </div>
 
-    <button class="btn primary full" onclick="saveTest()">Enregistrer le test de la semaine</button>
-
-    <div id="chartContainer" style="margin-top:24px">
-      <h4>Évolution</h4>
-      <canvas id="testChart" width="600" height="300"></canvas>
+    <!-- TAB : JOURNAL THOMAS -->
+    <div class="tab-pane" id="tab-thomas">
+      <div class="journal-wrap" id="journal-T"></div>
     </div>
 
-    <h4>Historique tests</h4>
-    <div id="testHistory"></div>
-
-    <div class="card warn" style="margin-top:20px">
-      <p style="margin:0;font-size:12px;line-height:1.7">
-        <strong style="color:var(--warning)">Signaux d'alerte</strong> — Arrête et consulte si :<br>
-        — Différentiel TA bras D/G augmente brutalement<br>
-        — Douleur, paresthésie, froideur du bras gauche persistante<br>
-        — Fatigue côté gauche disproportionnée 24h après l'effort<br>
-        — Aucune progression sur 3 semaines consécutives malgré charge constante
-      </p>
+    <!-- TAB : JOURNAL RENAUD -->
+    <div class="tab-pane" id="tab-renaud">
+      <div class="journal-wrap" id="journal-R"></div>
     </div>
-  </section>
 
-  <!-- ============ REF ============ -->
-  <section id="tab-ref" class="tab-content">
-    <h2><span class="num">05</span> Référence</h2>
-    <p class="subtitle">Glossaire · Données · Export</p>
+  </div><!-- /tab-content -->
 
-    <h3>Glossaire</h3>
-    <dl>
-      <div class="glossary-item">
-        <dt>RPE — Rate of Perceived Exertion</dt>
-        <dd>Effort perçu sur une échelle de 1 à 10. 6 = soutenu mais confortable, 8 = dur mais maîtrisé, 10 = max absolu. On vise 6-8 en travail.</dd>
-      </div>
-      <div class="glossary-item">
-        <dt>Swing (KB)</dt>
-        <dd>Balancement hardstyle. Force motrice = hanches (hip hinge), pas les bras. Expiration percussive en haut, jamais bloquer la respiration.</dd>
-      </div>
-      <div class="glossary-item">
-        <dt>Turkish get-up (TGU)</dt>
-        <dd>Se lever du sol avec une charge tenue à bout de bras. Travail de stabilité épaule, gainage, mobilité hanches. Lent, contrôlé, jamais en force.</dd>
-      </div>
-      <div class="glossary-item">
-        <dt>Gainage profond</dt>
-        <dd>Activation du transverse + plancher pelvien + diaphragme. Plus efficace que crunchs. Planche, dead bug, bird dog, hollow hold.</dd>
-      </div>
-      <div class="glossary-item">
-        <dt>EMOM — Every Minute On the Minute</dt>
-        <dd>Au top de chaque minute, tu fais X reps. Le temps restant = repos. Travail de densité.</dd>
-      </div>
-      <div class="glossary-item">
-        <dt>AMRAP — As Many Rounds As Possible</dt>
-        <dd>Sur une durée fixe (ex: 10 min), tu fais le maximum de tours d'un circuit donné, propre techniquement.</dd>
-      </div>
-      <div class="glossary-item">
-        <dt>Goblet</dt>
-        <dd>Tenir le KB à deux mains contre la poitrine. Position de base pour squat, lunge, carry.</dd>
-      </div>
-      <div class="glossary-item">
-        <dt>Hardstyle</dt>
-        <dd>Méthode KB issue de StrongFirst. Tension max, expiration percussive, alignement strict. Inverse du style girevoy (endurance).</dd>
-      </div>
-      <div class="glossary-item">
-        <dt>Hip hinge</dt>
-        <dd>Charnière de hanche. Mouvement clé du swing et du deadlift. Pli en avant en gardant le dos neutre, en envoyant les fesses en arrière.</dd>
-      </div>
-      <div class="glossary-item">
-        <dt>Valsalva</dt>
-        <dd>Apnée volontaire pour stabiliser le tronc sous charge. À éviter chez Takayasu (pic tensionnel). On préfère respiration synchronisée légère.</dd>
-      </div>
-    </dl>
+  <!-- ═══ BOTTOM NAV ═══ -->
+  <nav class="bottom-nav">
+    <button class="tab-btn active-T" id="btn-programme" onclick="switchTab('programme')">
+      <span class="ico">📋</span>
+      <span>Programme</span>
+    </button>
+    <button class="tab-btn" id="btn-home" onclick="switchTab('home')">
+      <span class="ico">🏠</span>
+      <span>Maison</span>
+    </button>
+    <button class="tab-btn" id="btn-thomas" onclick="switchTab('thomas')">
+      <span class="ico">🟠</span>
+      <span>Thomas</span>
+    </button>
+    <button class="tab-btn" id="btn-renaud" onclick="switchTab('renaud')">
+      <span class="ico">🔵</span>
+      <span>Renaud</span>
+    </button>
+  </nav>
 
-    <div class="export-zone">
-      <h4>Données</h4>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <button class="btn" onclick="exportData()">Exporter (JSON)</button>
-        <button class="btn" onclick="importData()">Importer</button>
-      </div>
-      <button class="btn full" style="margin-top:8px;color:var(--danger);border-color:rgba(255,82,82,0.3)" onclick="resetData()">Réinitialiser tout</button>
-      <input type="file" id="importFile" accept=".json" style="display:none">
-    </div>
-  </section>
-
-</main>
-
-<div class="toast" id="toast"></div>
+</div><!-- /app -->
 
 <script>
-// ============ DATA ============
-const PROGRAM = {
-  blocks: [
-    { num: 1, name: "Fondations & technique", weeks: [1,2,3,4] },
-    { num: 2, name: "Construction force-endurance", weeks: [5,6,7,8] },
-    { num: 3, name: "Densification athlétique", weeks: [9,10,11,12] }
-  ]
+'use strict';
+
+// ── DATA ──────────────────────────────────────────────────
+const EXERCISES = [{"seance": "A", "id": "a_pec", "name": "Développé pectoral / Presse pectorale", "prescribed": "4×10-12"}, {"seance": "A", "id": "a_epaules", "name": "Développé épaules câble / Presse épaules", "prescribed": "3×12-15"}, {"seance": "A", "id": "a_tirage", "name": "Tirage poulie haute prise large", "prescribed": "3×12-15"}, {"seance": "A", "id": "a_butterfly", "name": "Butterfly / Pec-Deck", "prescribed": "3×12-15"}, {"seance": "A", "id": "a_lat", "name": "Élévations latérales câble / machine", "prescribed": "3×15-20"}, {"seance": "A", "id": "a_triceps", "name": "Triceps pushdown câble", "prescribed": "3×12-15"}, {"seance": "A", "id": "a_curl_r", "name": "Curl poulie basse (rappel biceps)", "prescribed": "3×12-15"}, {"seance": "B", "id": "b_legpress", "name": "Leg Press machine", "prescribed": "4×12-15"}, {"seance": "B", "id": "b_hipthrust", "name": "Hip Thrust machine / Smith", "prescribed": "4×12-15"}, {"seance": "B", "id": "b_legcurl", "name": "Leg Curl machine", "prescribed": "3×12-15"}, {"seance": "B", "id": "b_abduct", "name": "Abduction hanche machine", "prescribed": "3×15-20"}, {"seance": "B", "id": "b_mollets", "name": "Mollets machine debout", "prescribed": "4×15-20"}, {"seance": "C", "id": "c_rowing", "name": "Rowing câble unilat. / machine seated", "prescribed": "4×10-12"}, {"seance": "C", "id": "c_tirage2", "name": "Tirage poulie haute prise neutre serrée", "prescribed": "4×10-12"}, {"seance": "C", "id": "c_rearfly", "name": "Butterfly inverse (Rear Delt Fly)", "prescribed": "3×15-20"}, {"seance": "C", "id": "c_curl", "name": "Curl biceps câble / machine", "prescribed": "3×12-15"}, {"seance": "C", "id": "c_facepull", "name": "Face pull câble rotation externe ⚕", "prescribed": "3×15-20"}, {"seance": "C", "id": "c_dips", "name": "Dips machine / cable fly (rappel pec+tri)", "prescribed": "3×12-15"}];
+
+const SEANCES = {
+  A: {label:"Séance A — Push", color:"#a00020", bg:"#fff0f3"},
+  B: {label:"Séance B — Lower", color:"#006030", bg:"#f0fdf4"},
+  C: {label:"Séance C — Pull", color:"#1a2ea0", bg:"#f0f3ff"},
 };
 
-// Templates de séances par bloc
-const SESSIONS = {
-  // ====== BLOC 1 ======
-  1: {
-    "force-a": {
-      day: "Lundi", title: "Force A — Hip hinge & Pull", duration: "45 min",
-      warmup: [
-        "Marche dynamique 2 min sur place",
-        "Cat-cow × 8 reps",
-        "Hip hinge sans charge × 10 (devant un mur)",
-        "Halos KB léger × 5 chaque sens",
-        "Glute bridge × 12"
-      ],
-      main: [
-        { name: "Deadlift KB (KB entre les pieds)", meta: "5 séries × 6 reps · 12 kg · repos 90s", note: "Apprentissage du hip hinge. Dos neutre, expiration sur la montée.", left: "Si saisie 1 main : main droite uniquement cette semaine. Gauche = travail technique à vide." },
-        { name: "Swing 2 mains", meta: "5 séries × 10 reps · 12 kg · repos 60s", note: "RPE 6. Hardstyle : explosion hanches, bras tendus relâchés. Pas de Valsalva.", left: null },
-        { name: "Rowing haltère appui table", meta: "3 × 8 reps/côté · 10 kg droite · repos 60s", note: "Coude proche du corps, expiration sur la tirée.", left: "Gauche : 6 kg, RPE max 5. Stop dès gêne." },
-        { name: "Dead bug", meta: "3 × 8 reps/côté · poids du corps", note: "Lombaires plaquées au sol. Respiration lente.", left: null }
-      ],
-      finisher: null,
-      cooldown: ["Étirement ischios assis 60s", "Étirement quadriceps debout 30s/côté", "Pigeon pose 60s/côté", "Respiration 4-7-8 × 5 cycles"]
-    },
-    "force-b": {
-      day: "Mercredi", title: "Force B — Squat & Push", duration: "45 min",
-      warmup: [
-        "Squat poids du corps × 15 (lent)",
-        "Wall slides × 10",
-        "Pompes inclinées contre mur × 10",
-        "Mobilité hanches 90/90 × 6/côté",
-        "Halos KB × 5/sens"
-      ],
-      main: [
-        { name: "Goblet squat KB", meta: "5 × 8 reps · 12 kg · repos 90s", note: "Coudes vers l'intérieur, descente lente 3s, remontée tonique. Genoux suivent les pointes.", left: null },
-        { name: "Pompes sur poignées (push-up handles)", meta: "4 × max-1 reps · repos 90s", note: "Arrête 1 rep avant l'échec. Si trop dur : pompes inclinées sur table.", left: "Si déséquilibre côté gauche : pompes à genoux ou inclinées." },
-        { name: "Turkish Get-Up (TGU)", meta: "3 × 2 reps/côté · 8 kg droite · repos 90s", note: "Lent, contrôlé. Yeux fixés sur la charge. Pas en force.", left: "Gauche : sans charge ou avec une chaussure sur le poing. Pure technique." },
-        { name: "Planche frontale", meta: "3 × 30s · poids du corps · repos 45s", note: "Fessiers serrés, lombaires neutres. Respiration normale.", left: null }
-      ],
-      finisher: null,
-      cooldown: ["Mobilisation thoracique au sol × 6", "Étirement psoas 45s/côté", "Cobra doux × 5 respirations", "Cohérence cardiaque 3 min"]
-    },
-    "kb-flow": {
-      day: "Vendredi", title: "Flow KB — Technique & Conditionnement", duration: "40 min",
-      warmup: [
-        "Skip sur place 60s léger",
-        "Halos KB × 5/sens",
-        "Bonjour à vide × 10",
-        "Swing à vide × 15",
-        "Mobilité épaules dynamique × 10"
-      ],
-      main: [
-        { name: "Swing 2 mains — densité", meta: "EMOM 10 min : 10 swings/min · 12 kg", note: "Travail de respiration et de timing hanches. RPE 6-7.", left: null },
-        { name: "Goblet carry (marche lestée)", meta: "4 × 30m · 12 kg · repos 60s", note: "Posture haute, gainage actif. Respiration nasale si possible.", left: null },
-        { name: "Farmer carry main droite", meta: "3 × 20m · 12 kg · repos 60s", note: "Épaule basse, pas de bascule du bassin.", left: "Gauche : 8 kg (haltère), 15m, RPE max 5. Note la distance dans l'onglet Bras G." },
-        { name: "Bird dog", meta: "3 × 8 reps/côté · lent", note: "Bras et jambe opposés tendus 2s. Anti-rotation.", left: null }
-      ],
-      finisher: null,
-      cooldown: ["Étirement grand dorsal 45s/côté", "Étirement fessiers couché 60s/côté", "Respiration ventrale 3 min"]
-    }
-  },
-
-  // ====== BLOC 2 ======
-  2: {
-    "force-a": {
-      day: "Lundi", title: "Force A — Hip hinge volume", duration: "50 min",
-      warmup: [
-        "Marche dynamique 2 min",
-        "Cat-cow + bird dog × 8",
-        "Glute bridge × 15",
-        "Swing à vide × 15",
-        "Halos KB × 5/sens"
-      ],
-      main: [
-        { name: "Deadlift KB", meta: "5 × 5 reps · 12 kg · repos 90s", note: "Tempo 2-1-1. Cherche la tension maximale dans la chaîne postérieure.", left: null },
-        { name: "Swing 1 main DROITE", meta: "5 × 8 reps · 12 kg · repos 75s", note: "Anti-rotation tronc. Épaule packée. Expiration percussive.", left: "Gauche : swing 2 mains 12 kg × 8 reps OU swing 1 main 8 kg si TA stable. Décide selon test bras G de la semaine." },
-        { name: "Rowing haltère 1 bras", meta: "4 × 8 reps/côté · 10 kg D · repos 75s", note: "Contrôle excentrique 3s.", left: "Gauche : 8 kg max, RPE 5-6. Tempo identique." },
-        { name: "Hollow hold", meta: "3 × 25s · repos 45s", note: "Lombaires au sol. Bras et jambes tendus.", left: null }
-      ],
-      finisher: { name: "Swings 2 mains", meta: "100 reps total en moins de 5 min · 12 kg", note: "Coupe en séries libres. Respiration prioritaire." },
-      cooldown: ["Pigeon 60s/côté", "Étirement ischios 45s/côté", "Cohérence cardiaque 3 min"]
-    },
-    "force-b": {
-      day: "Mercredi", title: "Force B — Push & Carry", duration: "50 min",
-      warmup: [
-        "Squat poids du corps × 15",
-        "Pompes inclinées × 12",
-        "Wall slides × 12",
-        "Halos KB × 5/sens",
-        "T-spine rotations × 8/côté"
-      ],
-      main: [
-        { name: "Pompes sur poignées", meta: "5 × 6-10 reps · repos 75s", note: "Amplitude max, descente 3s. Si facile : pause 2s au sol.", left: "Bras gauche actif : note toute asymétrie de poussée." },
-        { name: "Goblet squat", meta: "4 × 8 reps · 12 kg · repos 90s", note: "Pause 1s en bas. Sortie tonique.", left: null },
-        { name: "Press haltère 1 bras (en pied)", meta: "4 × 6 reps/côté · 10 kg D · repos 75s", note: "Gainage anti-extension. Expiration sur la poussée.", left: "Gauche : 6 kg max, RPE 5. Si gêne : presse à genoux ou Z-press." },
-        { name: "Farmer carry KB droite + haltère gauche", meta: "4 × 30m · 12 kg D / 8 kg G · repos 60s", note: "Charge asymétrique volontaire. Bassin stable.", left: "Inversion possible : 10 kg D / 5 kg G si tolérance gauche limitée." }
-      ],
-      finisher: null,
-      cooldown: ["Étirement pectoraux mur 30s/côté", "Mobilisation thoracique × 8", "Respiration ventrale 3 min"]
-    },
-    "kb-flow": {
-      day: "Vendredi", title: "Flow KB — Conditionnement", duration: "45 min",
-      warmup: [
-        "Skip + jumping jacks 90s",
-        "Halos × 5/sens",
-        "Swings à vide × 20",
-        "Squats sautés léger × 10",
-        "Mobilité hanches × 8"
-      ],
-      main: [
-        { name: "Complexe KB DROITE", meta: "5 tours · Clean + Press + Squat = 1 rep · 5 reps/tour · 12 kg · repos 90s", note: "Enchaînement fluide, respiration entre chaque rep.", left: "Gauche : version goblet (clean → goblet squat → goblet press au menton, sans bras au plafond) 8 kg, 5 reps, RPE 5." },
-        { name: "Swing 1 main alterné", meta: "EMOM 10 min : 6 swings D + 6 G/min · 12 kg D / 8 kg G", note: "Alternance toutes les minutes. Si RPE > 7 côté G : passe en swing 2 mains.", left: "Charge G adaptable. Stop si crampe ou paresthésie." },
-        { name: "Dead bug avec haltère", meta: "3 × 8 reps/côté · 5 kg", note: "Haltère tenu bras tendu vers le plafond, opposé à la jambe qui descend.", left: null }
-      ],
-      finisher: { name: "Burpees sans saut", meta: "AMRAP 4 min · poids du corps", note: "Cadence régulière. Respiration synchronisée. RPE 7 max." },
-      cooldown: ["Étirement quadriceps 30s/côté", "Pigeon 60s/côté", "Respiration nasale 3 min"]
-    },
-    "core-mobility": {
-      day: "Samedi", title: "Gainage profond & mobilité", duration: "30 min",
-      warmup: [
-        "Marche 2 min",
-        "Cat-cow × 10",
-        "Cobra doux × 8"
-      ],
-      main: [
-        { name: "Planche frontale", meta: "4 × 45s · repos 45s", note: "Fessiers serrés, respiration ventrale.", left: null },
-        { name: "Planche latérale", meta: "3 × 25s/côté · repos 30s", note: "Hanche poussée vers le plafond.", left: "Gauche : 15s suffit si gêne épaule. Pas de douleur." },
-        { name: "Bird dog lent", meta: "3 × 10 reps/côté", note: "Tempo 3-2-3. Anti-rotation prioritaire.", left: null },
-        { name: "TGU technique", meta: "3 × 2 reps/côté · 8 kg D / sans charge G", note: "Lent, méditatif. Travail de la position d'épaule.", left: "Gauche : sans charge ou chaussure sur le poing." },
-        { name: "Mobilité hanches 90/90", meta: "3 × 8 transitions/côté", note: "Lent, sans à-coups.", left: null }
-      ],
-      finisher: null,
-      cooldown: ["Cohérence cardiaque 5 min", "Pigeon prolongé 90s/côté"]
-    }
-  },
-
-  // ====== BLOC 3 ======
-  3: {
-    "force-a": {
-      day: "Lundi", title: "Force A — Puissance hip hinge", duration: "50 min",
-      warmup: [
-        "Skip + mobilité dynamique 3 min",
-        "Glute bridge × 15",
-        "Swing à vide × 20",
-        "Halos × 5/sens",
-        "Squat sauté léger × 8"
-      ],
-      main: [
-        { name: "Deadlift KB tempo", meta: "5 × 4 reps · 12 kg · tempo 3-1-X · repos 90s", note: "Descente 3s, pause 1s, montée explosive.", left: null },
-        { name: "Swing 1 main D + transfert G", meta: "5 × (5 D + 5 G)/min EMOM 10 min · 12 kg", note: "Transfert hand-to-hand au sommet. Si G limité : remplace par 2 mains.", left: "Si écart TA stable depuis 4 semaines : 12 kg G autorisé en RPE 6. Sinon : 10 kg max." },
-        { name: "Rowing haltère lourd", meta: "4 × 6 reps/côté · 10 kg D · repos 75s", note: "Contraction maximale en haut, pause 1s.", left: "Gauche : 8-10 kg si test farmer carry G a progressé. Sinon 6-8 kg." },
-        { name: "Hollow rock", meta: "3 × 15 reps · repos 45s", note: "Mouvement contrôlé, dos arrondi.", left: null }
-      ],
-      finisher: { name: "150 swings", meta: "100 swings 2 mains 12 kg en moins de 5 min", note: "Découpage libre. RPE 8 toléré, pas Valsalva." },
-      cooldown: ["Pigeon 60s/côté", "Ischios + lombaires 90s", "Cohérence cardiaque 3 min"]
-    },
-    "force-b": {
-      day: "Mercredi", title: "Force B — Push & Carry densité", duration: "50 min",
-      warmup: [
-        "Pompes inclinées × 12",
-        "Wall slides × 12",
-        "T-spine ouverture × 10",
-        "Halos × 5/sens",
-        "Squat × 15"
-      ],
-      main: [
-        { name: "Pompes sur poignées tempo", meta: "5 × 5-8 reps · tempo 3-1-1 · repos 90s", note: "Descente 3s, pause 1s en bas, remontée tonique. Si trop facile : pieds surélevés.", left: null },
-        { name: "Goblet squat lourd", meta: "5 × 6 reps · 12 kg · repos 90s", note: "Pause 2s en bas. Sortie maximale.", left: null },
-        { name: "Press haltère 1 bras", meta: "4 × 5 reps/côté · 10 kg D · repos 75s", note: "Strict. Pas de hanche.", left: "Gauche : 8 kg si test goblet G ≥ 10 reps, sinon 6 kg. RPE 5-6 max." },
-        { name: "Suitcase carry (1 charge 1 côté)", meta: "4 × 25m/côté · 12 kg D / 10 kg G · repos 45s", note: "Anti-latéro-flexion. Épaules niveau.", left: "Charge G ajustable. Important : ne pas pencher." }
-      ],
-      finisher: { name: "Pompes EMOM", meta: "EMOM 6 min · 6 pompes/min", note: "Garde 30s de récup minimum chaque minute. RPE 7." },
-      cooldown: ["Étirement pectoraux 45s/côté", "Mobilité épaule en suspension 30s", "Respiration ventrale 3 min"]
-    },
-    "kb-flow": {
-      day: "Vendredi", title: "Flow KB — Complexes athlétiques", duration: "45 min",
-      warmup: [
-        "Échauffement complet 5 min",
-        "Halos + bonjours + squats × 10",
-        "Swings à vide × 20"
-      ],
-      main: [
-        { name: "Complexe DROITE", meta: "AMRAP 8 min · Clean + Press + Squat + Swing = 1 round · 12 kg", note: "Note le nombre de rounds. Cible : ≥ 8 rounds.", left: "Gauche : version 8 kg goblet (clean → goblet press menton → goblet squat → swing 2 mains). AMRAP 8 min en parallèle." },
-        { name: "Swing 1 main alterné densité", meta: "EMOM 12 min : 8 swings/min alterné côté chaque minute · 12 kg D / 10 kg G", note: "RPE 7-8. Stop si technique casse.", left: "Charge G adaptable. Si fatigue : passe en 2 mains pour les minutes G." },
-        { name: "TGU complet", meta: "3 × 2 reps/côté · 12 kg D · repos 90s", note: "Lent, méthodique. Maîtrise totale.", left: "Gauche : 8 kg max si TGU technique validé, sinon 6 kg ou chaussure." }
-      ],
-      finisher: { name: "Conditionnement", meta: "AMRAP 5 min : 5 swings + 5 goblet squat + 5 pompes · 12 kg", note: "Cadence libre, technique > vitesse." },
-      cooldown: ["Pigeon 90s/côté", "Étirement complet 5 min"]
-    },
-    "core-mobility": {
-      day: "Samedi", title: "Gainage athlétique & mobilité", duration: "35 min",
-      warmup: [
-        "Marche 2 min",
-        "Cat-cow × 10",
-        "Mobilité hanches × 8"
-      ],
-      main: [
-        { name: "Planche frontale + bascules", meta: "4 × 60s · repos 45s", note: "Mouvement minimal entre épaules/orteils. Respiration constante.", left: null },
-        { name: "Side plank + rotation", meta: "3 × 8 reps/côté · repos 45s", note: "Bras passe sous le corps puis vers le plafond.", left: "Gauche : statique 20s si gêne. Pas de douleur." },
-        { name: "Dead bug haltère/KB", meta: "3 × 10 reps/côté · 5 kg ou 8 kg", note: "Charge tenue bras tendu, opposée à la jambe.", left: null },
-        { name: "Bird dog dynamique", meta: "3 × 10 reps/côté", note: "Coude vers genou, puis extension complète.", left: null },
-        { name: "TGU sans charge", meta: "3 × 3 reps/côté", note: "Pure mobilité. Lent, fluide.", left: null }
-      ],
-      finisher: null,
-      cooldown: ["Cohérence cardiaque 5 min", "Étirement global 5 min"]
-    }
-  }
+// ── STATE ─────────────────────────────────────────────────
+let currentTab = 'programme';
+let journalState = {
+  T: {mode:'list', newSeance:'A', newDate:today(), detail:null},
+  R: {mode:'list', newSeance:'A', newDate:today(), detail:null},
 };
+let toastTimer = null;
 
-// Planning hebdo par bloc
-const SCHEDULE = {
-  1: [
-    { day: "Lundi", session: "force-a" },
-    { day: "Mardi", run: "Run easy 20-25 min · RPE 5-6 · respiration nasale si possible", duration: "25 min" },
-    { day: "Mercredi", session: "force-b" },
-    { day: "Jeudi", rest: "OFF · marche, mobilité légère", duration: "—" },
-    { day: "Vendredi", session: "kb-flow" },
-    { day: "Samedi", run: "Run easy 25-30 min · RPE 5-6", duration: "30 min" },
-    { day: "Dimanche", rest: "OFF total", duration: "—" }
-  ],
-  2: [
-    { day: "Lundi", session: "force-a" },
-    { day: "Mardi", run: "Run progressif 30 min · 20min easy + 10min RPE 7", duration: "30 min" },
-    { day: "Mercredi", session: "force-b" },
-    { day: "Jeudi", run: "Run easy 25 min · récup active", duration: "25 min" },
-    { day: "Vendredi", session: "kb-flow" },
-    { day: "Samedi", session: "core-mobility" },
-    { day: "Dimanche", rest: "OFF total", duration: "—" }
-  ],
-  3: [
-    { day: "Lundi", session: "force-a" },
-    { day: "Mardi", run: "Fractionné 30 min · 10min easy + 8×(1min RPE 8 / 1min easy) + 4min easy", duration: "30 min" },
-    { day: "Mercredi", session: "force-b" },
-    { day: "Jeudi", run: "Run easy 25-30 min · récup", duration: "30 min" },
-    { day: "Vendredi", session: "kb-flow" },
-    { day: "Samedi", session: "core-mobility", run: "Optionnel : run long 40-50 min RPE 5-6 si forme", duration: "35-50 min" },
-    { day: "Dimanche", rest: "OFF total", duration: "—" }
-  ]
-};
+function today(){return new Date().toISOString().slice(0,10);}
 
-function getBlockForWeek(w) {
-  if (w <= 4) return 1;
-  if (w <= 8) return 2;
-  return 3;
+// ── STORAGE ────────────────────────────────────────────────
+function getJournal(who){
+  try{return JSON.parse(localStorage.getItem('journal_'+who))||[];}
+  catch{return [];}
 }
-
-// ============ STORAGE ============
-const STORAGE_KEY = "takayasu_protocol_v1";
-let DATA = loadData();
-
-function loadData() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return defaultData();
-    return JSON.parse(raw);
-  } catch (e) { return defaultData(); }
+function saveJournal(who,data){
+  localStorage.setItem('journal_'+who,JSON.stringify(data));
 }
-function defaultData() {
-  return {
-    currentWeek: 1,
-    completedSessions: {}, // "1-Lundi" -> timestamp
-    logs: [],
-    tests: [],
-    lastSessionDate: null,
-    streak: 0
-  };
+function addEntry(who,entry){
+  const j=getJournal(who);
+  j.unshift(entry);
+  saveJournal(who,j);
 }
-function saveData() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA));
+function deleteEntry(who,id){
+  const j=getJournal(who).filter(e=>e.id!==id);
+  saveJournal(who,j);
 }
+function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
 
-// ============ TABS ============
-document.querySelectorAll('nav button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    if (btn.dataset.tab === 'log') renderLogs();
-    if (btn.dataset.tab === 'test') { renderTests(); drawChart(); }
-    if (btn.dataset.tab === 'program') renderWeek();
-  });
-});
-
-document.querySelectorAll('[data-go-block]').forEach(el => {
-  el.addEventListener('click', () => {
-    const block = parseInt(el.dataset.goBlock);
-    const week = (block - 1) * 4 + 1;
-    DATA.currentWeek = week;
-    saveData();
-    document.querySelector('nav button[data-tab="program"]').click();
-  });
-});
-
-// ============ PROGRAM RENDER ============
-function renderWeekSelector() {
-  const sel = document.getElementById('weekSelector');
-  sel.innerHTML = '';
-  for (let w = 1; w <= 12; w++) {
-    const btn = document.createElement('button');
-    btn.className = 'week-btn';
-    btn.textContent = 'S' + w;
-    if (w === DATA.currentWeek) btn.classList.add('active');
-    if (isWeekCompleted(w)) btn.classList.add('completed');
-    btn.onclick = () => { DATA.currentWeek = w; saveData(); renderWeek(); };
-    sel.appendChild(btn);
-  }
-}
-function isWeekCompleted(w) {
-  const block = getBlockForWeek(w);
-  const days = SCHEDULE[block];
-  const required = days.filter(d => d.session).length;
-  let done = 0;
-  days.forEach(d => {
-    if (d.session && DATA.completedSessions[`${w}-${d.day}`]) done++;
-  });
-  return done >= required;
-}
-function renderWeek() {
-  renderWeekSelector();
-  const w = DATA.currentWeek;
-  const block = getBlockForWeek(w);
-  const days = SCHEDULE[block];
-  const wrap = document.getElementById('weekContent');
-
-  let html = `<div class="card accent" style="margin-bottom:20px">
-    <div style="font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.2em;color:var(--text-faint)">Bloc ${block} · Semaine ${w}</div>
-    <div style="font-family:var(--serif);font-size:20px;margin-top:4px">${PROGRAM.blocks[block-1].name}</div>
-  </div>`;
-
-  days.forEach(d => {
-    if (d.session) {
-      const s = SESSIONS[block][d.session];
-      const key = `${w}-${d.day}`;
-      const done = !!DATA.completedSessions[key];
-      html += `
-        <div class="session-card ${done ? 'done' : ''}" data-key="${key}">
-          <div class="session-header" onclick="toggleSession(this)">
-            <div>
-              <div class="day">${d.day} · ${s.duration}</div>
-              <div class="title">${s.title}</div>
-            </div>
-            <div class="session-check ${done ? 'checked' : ''}" onclick="event.stopPropagation();toggleDone('${key}')"></div>
-          </div>
-          <div class="session-body">
-            <div class="section-block">
-              <div class="section-label">Échauffement</div>
-              ${s.warmup.map(e => `<div style="font-size:12px;color:var(--text-dim);padding:3px 0">— ${e}</div>`).join('')}
-            </div>
-            <div class="section-block">
-              <div class="section-label">Bloc principal</div>
-              ${s.main.map(ex => `
-                <div class="exercise">
-                  <div class="exercise-name">${ex.name}</div>
-                  <div class="exercise-meta">${ex.meta.split('·').map(p => `<span class="pill">${p.trim()}</span>`).join('')}</div>
-                  ${ex.note ? `<div class="exercise-note">${ex.note}</div>` : ''}
-                  ${ex.left ? `<div class="exercise-note left-arm">${ex.left}</div>` : ''}
-                </div>
-              `).join('')}
-            </div>
-            ${s.finisher ? `
-              <div class="section-block">
-                <div class="section-label">Finisher</div>
-                <div class="exercise">
-                  <div class="exercise-name">${s.finisher.name}</div>
-                  <div class="exercise-meta">${s.finisher.meta.split('·').map(p => `<span class="pill">${p.trim()}</span>`).join('')}</div>
-                  ${s.finisher.note ? `<div class="exercise-note">${s.finisher.note}</div>` : ''}
-                </div>
-              </div>
-            ` : ''}
-            <div class="section-block">
-              <div class="section-label">Retour au calme</div>
-              ${s.cooldown.map(e => `<div style="font-size:12px;color:var(--text-dim);padding:3px 0">— ${e}</div>`).join('')}
-            </div>
-            <div class="session-controls">
-              <button class="btn" onclick="document.querySelector('nav button[data-tab=&quot;log&quot;]').click()">Logger</button>
-              <button class="btn" onclick="document.querySelector('nav button[data-tab=&quot;timer&quot;]').click()">Timer</button>
-            </div>
-          </div>
-        </div>
-      `;
-    } else if (d.run) {
-      html += `
-        <div class="card" style="border-left:2px solid var(--accent-dim)">
-          <div style="font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.2em;color:var(--text-faint)">${d.day} · ${d.duration} · Course</div>
-          <div style="font-family:var(--serif);font-size:16px;margin-top:6px">${d.run}</div>
-        </div>
-      `;
-    } else if (d.rest) {
-      html += `
-        <div class="card" style="opacity:0.6">
-          <div style="font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.2em;color:var(--text-faint)">${d.day} · Repos</div>
-          <div style="font-family:var(--serif);font-size:15px;margin-top:6px;color:var(--text-dim)">${d.rest}</div>
-        </div>
-      `;
+// ── TABS ───────────────────────────────────────────────────
+function switchTab(tab){
+  currentTab=tab;
+  ['programme','home','thomas','renaud'].forEach(t=>{
+    const pane=document.getElementById('tab-'+t);
+    const btn=document.getElementById('btn-'+t);
+    if(pane) pane.classList.toggle('active',t===tab);
+    if(btn){
+      btn.className='tab-btn';
+      if(t===tab) btn.classList.add(t==='thomas'?'active-T':t==='renaud'?'active-R':t==='home'?'active-home':'active-T');
     }
   });
-  wrap.innerHTML = html;
-}
-function toggleSession(el) {
-  el.parentElement.querySelector('.session-body').classList.toggle('open');
-}
-function toggleDone(key) {
-  if (DATA.completedSessions[key]) {
-    delete DATA.completedSessions[key];
-  } else {
-    DATA.completedSessions[key] = Date.now();
-    updateStreak();
-    toast("Séance validée");
-  }
-  saveData();
-  renderWeek();
+  document.getElementById('tabContent').scrollTop=0;
+  if(tab==='thomas') renderJournal('T');
+  if(tab==='renaud') renderJournal('R');
+  // home tab is static HTML, no render needed
 }
 
-// ============ STREAK ============
-function updateStreak() {
-  const today = new Date().toDateString();
-  const dates = Object.values(DATA.completedSessions).map(t => new Date(t).toDateString());
-  const uniqueDates = [...new Set(dates)].sort((a, b) => new Date(b) - new Date(a));
-  let streak = 0;
-  let cursor = new Date();
-  // Compte les jours consécutifs en partant d'aujourd'hui ou hier
-  if (!uniqueDates.includes(today) && !uniqueDates.includes(new Date(Date.now() - 86400000).toDateString())) {
-    streak = 0;
-  } else {
-    for (let i = 0; i < 60; i++) {
-      const d = new Date(cursor.getTime() - i * 86400000).toDateString();
-      if (uniqueDates.includes(d)) streak++;
-      else if (i > 0) break; // tolérance 1 jour off
-    }
-  }
-  // Méthode simplifiée : compte le nombre de séances faites dans les 7 derniers jours
-  const week = uniqueDates.filter(d => (Date.now() - new Date(d).getTime()) < 7 * 86400000).length;
-  DATA.streak = week;
-  document.getElementById('streakCount').textContent = week;
-}
+// ── JOURNAL RENDER ─────────────────────────────────────────
+function renderJournal(who){
+  const wrap=document.getElementById('journal-'+(who==='T'?'T':'R'));
+  const st=journalState[who];
+  const isT=who==='T';
+  const col=isT?'#c05000':'#0050a0';
+  const name=isT?'Thomas':'Renaud';
 
-// ============ LOG ============
-let currentRpe = null;
-document.querySelectorAll('.rpe-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.rpe-btn').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-    currentRpe = parseInt(btn.dataset.val);
-  });
-});
-function saveLog() {
-  const ex = document.getElementById('logExercise').value.trim();
-  const sets = document.getElementById('logSets').value.trim();
-  const load = document.getElementById('logLoad').value.trim();
-  const note = document.getElementById('logNote').value.trim();
-  if (!ex) { toast("Nom d'exercice requis"); return; }
-  DATA.logs.unshift({
-    date: Date.now(),
-    exercise: ex,
-    sets, load, rpe: currentRpe, note,
-    week: DATA.currentWeek
-  });
-  saveData();
-  document.getElementById('logExercise').value = '';
-  document.getElementById('logSets').value = '';
-  document.getElementById('logLoad').value = '';
-  document.getElementById('logNote').value = '';
-  document.querySelectorAll('.rpe-btn').forEach(b => b.classList.remove('selected'));
-  currentRpe = null;
-  renderLogs();
-  toast("Enregistré");
-}
-function renderLogs() {
-  const wrap = document.getElementById('logHistory');
-  if (!DATA.logs.length) {
-    wrap.innerHTML = '<div class="empty">Aucune entrée encore. Première séance ?</div>';
+  if(st.mode==='new'){
+    renderNewEntry(who,wrap);
     return;
   }
-  wrap.innerHTML = DATA.logs.slice(0, 30).map(l => {
-    const d = new Date(l.date);
-    const dStr = `S${l.week} · ${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')} · ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
-    return `
-      <div class="log-entry">
-        <div class="log-head">
-          <div class="log-date">${dStr}</div>
-          ${l.rpe ? `<div class="log-rpe">RPE ${l.rpe}</div>` : ''}
-        </div>
-        <div class="log-name">${l.exercise}</div>
-        <div class="log-note">${l.sets || ''} ${l.load ? '· ' + l.load : ''}</div>
-        ${l.note ? `<div class="log-note" style="margin-top:6px;font-style:italic;color:var(--text-faint)">"${l.note}"</div>` : ''}
-      </div>
-    `;
-  }).join('');
-}
-
-// ============ TIMER ============
-let timerInterval = null;
-let timerSeconds = 0;
-let timerMode = 'rest';
-let timerRunning = false;
-let emomRound = 0;
-let emomTotalRounds = 10;
-let emomMinPerRound = 1;
-
-document.querySelectorAll('.timer-mode-btn').forEach(b => {
-  b.addEventListener('click', () => {
-    document.querySelectorAll('.timer-mode-btn').forEach(x => x.classList.remove('active'));
-    b.classList.add('active');
-    timerMode = b.dataset.tmode;
-    timerReset();
-    document.getElementById('presetWrap').style.display = timerMode === 'rest' ? 'block' : 'none';
-    document.getElementById('emomConfig').style.display = timerMode === 'emom' ? 'block' : 'none';
-    document.getElementById('amrapConfig').style.display = timerMode === 'amrap' ? 'block' : 'none';
-    document.getElementById('tDisplayMode').textContent = { rest: 'Repos', emom: 'EMOM', amrap: 'AMRAP' }[timerMode];
-  });
-});
-
-function setRest(s) {
-  timerSeconds = s;
-  updateTimerDisplay();
-}
-function formatTime(s) {
-  const m = Math.floor(s / 60);
-  const sec = s % 60;
-  return `${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
-}
-function updateTimerDisplay() {
-  const el = document.getElementById('tDisplay');
-  el.textContent = formatTime(Math.max(0, timerSeconds));
-  el.classList.remove('warning', 'danger');
-  if (timerMode === 'rest') {
-    if (timerSeconds <= 5 && timerSeconds > 0) el.classList.add('danger');
-    else if (timerSeconds <= 10) el.classList.add('warning');
+  if(st.mode==='detail' && st.detail!==null){
+    renderDetail(who,wrap,st.detail);
+    return;
   }
-  const meta = document.getElementById('tMeta');
-  if (timerMode === 'emom') meta.textContent = `Tour ${emomRound}/${emomTotalRounds}`;
-  else if (timerMode === 'amrap') meta.textContent = timerRunning ? 'Tours libres — note ta perf' : '';
-  else meta.textContent = '';
-}
-function timerToggle() {
-  if (timerRunning) { timerStop(); } else { timerStart(); }
-}
-function timerStart() {
-  if (timerMode === 'emom') {
-    emomTotalRounds = parseInt(document.getElementById('emomRounds').value) || 10;
-    emomMinPerRound = parseInt(document.getElementById('emomMin').value) || 1;
-    emomRound = 1;
-    timerSeconds = emomMinPerRound * 60;
-  } else if (timerMode === 'amrap') {
-    const dur = parseInt(document.getElementById('amrapDuration').value) || 10;
-    timerSeconds = dur * 60;
-  } else if (timerSeconds === 0) {
-    timerSeconds = 60;
+
+  // LIST mode
+  const journal=getJournal(who);
+  let html='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-top:4px;">'+
+    '<div><div style="font-size:21px;font-weight:700;color:'+col+'">'+ name +'</div>'+
+    '<div style="font-size:12px;color:#888;margin-top:2px;">Journal d\'entraînement · '+journal.length+' séance'+(journal.length!==1?'s':'')+ '</div></div>'+
+    '<button class="j-new-btn j-new-'+(isT?'T':'R')+'" onclick="startNew(\''+(who==='T'?'T':'R')+'\')">'+
+    '+ Nouvelle séance</button>'+
+    '</div>';
+
+  // Progress summary
+  if(journal.length>0){
+    html+=renderProgressSummary(who,journal);
   }
-  timerRunning = true;
-  document.getElementById('timerStartBtn').textContent = 'Pause';
-  beep(880, 100);
-  timerInterval = setInterval(() => {
-    timerSeconds--;
-    if (timerSeconds <= 3 && timerSeconds > 0) beep(660, 80);
-    if (timerSeconds <= 0) {
-      if (timerMode === 'emom') {
-        emomRound++;
-        if (emomRound > emomTotalRounds) {
-          timerStop();
-          beep(1320, 400);
-          toast("EMOM terminé");
-          return;
+
+  // History list
+  html+='<div class="history-section">'+
+    '<div class="history-title">Historique</div>';
+
+  if(journal.length===0){
+    html+='<div class="empty-state"><div class="empty-ico">📊</div>'+
+      '<div class="empty-txt">Aucune séance enregistrée.<br>Lance ta première séance !</div></div>';
+  } else {
+    journal.forEach(entry=>{
+      const seanceInfo=SEANCES[entry.seance]||{};
+      const exCount=(entry.exercises||[]).filter(e=>e.sets.some(s=>s.kg||s.reps)).length;
+      html+='<div class="history-entry" onclick="showDetail(\''+(who==='T'?'T':'R')+'\',\''+ entry.id+'\')">'+
+        '<div class="he-header">'+
+        '<span class="he-seance he-seance-'+entry.seance+'">'+ (seanceInfo.label||entry.seance) +'</span>'+
+        '<div style="display:flex;align-items:center;gap:6px;">'+
+        '<span class="he-date">'+formatDate(entry.date)+'</span>'+
+        '<button class="he-delete" onclick="event.stopPropagation();confirmDelete(\''+(who==='T'?'T':'R')+'\',\''+entry.id+'\')" title="Supprimer">×</button>'+
+        '</div></div>'+
+        '<div class="he-summary">'+exCount+' exercice'+(exCount!==1?'s':'')+(entry.note?' · 💬':'')+ '</div>'+
+        '</div>';
+    });
+  }
+  html+='</div>';
+  wrap.innerHTML=html;
+}
+
+function renderProgressSummary(who,journal){
+  // Find best performance per exercise
+  const bests={};
+  const prev={};
+  journal.forEach((entry,idx)=>{
+    (entry.exercises||[]).forEach(ex=>{
+      ex.sets.forEach(s=>{
+        const kg=parseFloat(s.kg)||0;
+        if(kg>0){
+          if(!bests[ex.id]||kg>bests[ex.id].kg){
+            bests[ex.id]={kg,reps:s.reps,date:entry.date};
+          }
         }
-        timerSeconds = emomMinPerRound * 60;
-        beep(1100, 200);
-      } else {
-        timerStop();
-        beep(1320, 400);
-        toast(timerMode === 'amrap' ? "AMRAP terminé" : "Temps écoulé");
-        return;
+      });
+    });
+  });
+  // Previous best (second occurrence)
+  if(journal.length>1){
+    journal.slice(1).forEach(entry=>{
+      (entry.exercises||[]).forEach(ex=>{
+        ex.sets.forEach(s=>{
+          const kg=parseFloat(s.kg)||0;
+          if(kg>0&&!prev[ex.id]) prev[ex.id]={kg,reps:s.reps};
+        });
+      });
+    });
+  }
+
+  const rows=EXERCISES.filter(e=>bests[e.id]).map(e=>{
+    const b=bests[e.id];
+    const p=prev[e.id];
+    let trend='';
+    if(p){
+      if(b.kg>p.kg) trend='<span class="prog-ex-trend">↑ +'+(b.kg-p.kg).toFixed(1)+' kg</span>';
+      else if(b.kg<p.kg) trend='<span class="prog-ex-trend down">↓</span>';
+    }
+    return '<div class="prog-ex-row">'+
+      '<div class="prog-ex-name">'+ e.name +'</div>'+
+      '<div><span class="prog-ex-best">'+ b.kg +' kg</span> '+trend+'</div>'+
+      '</div>';
+  }).join('');
+
+  if(!rows) return '';
+  return '<div class="prog-summary"><div class="prog-summary-title">📈 Records personnels</div>'+ rows +'</div>';
+}
+
+function renderNewEntry(who,wrap){
+  const st=journalState[who];
+  const isT=who==='T';
+  const col=isT?'#c05000':'#0050a0';
+  const focusClass=isT?'set-input-T':'set-input-R';
+
+  const exList=EXERCISES.filter(e=>e.seance===st.newSeance);
+
+  let setsHTML='';
+  exList.forEach(ex=>{
+    const nSets=parseInt(ex.prescribed.split('×')[0])||3;
+    const hasLeft=isT && ['a_pec','a_epaules','a_lat','a_triceps','a_curl_r','c_rowing','c_curl','c_dips'].includes(ex.id);
+
+    let gridRows='';
+    for(let i=0;i<nSets;i++){
+      const side=hasLeft?' (bras D)':'';
+      gridRows+='<div class="set-num">'+(i+1)+'</div>'+
+        '<input class="set-input" id="kg_'+ ex.id+'_'+i+'" type="number" step="0.5" min="0" placeholder="kg">'+
+        '<input class="set-input" id="reps_'+ ex.id+'_'+i+'" type="number" min="0" placeholder="reps">'+
+        '<input class="set-input" id="note_set_'+ ex.id+'_'+i+'" type="text" placeholder="✓ ok" style="font-size:13px;">';
+    }
+    if(hasLeft){
+      gridRows+='<div class="left-arm-label">⚕ Bras gauche — séries séparées</div>';
+      for(let i=0;i<nSets;i++){
+        gridRows+='<div class="set-num" style="color:#c00020;">'+(i+1)+' G</div>'+
+          '<input class="set-input set-input-left" id="kg_L_'+ ex.id+'_'+i+'" type="number" step="0.5" min="0" placeholder="kg G">'+
+          '<input class="set-input set-input-left" id="reps_L_'+ ex.id+'_'+i+'" type="number" min="0" placeholder="reps G">'+
+          '<div></div>';
       }
     }
-    updateTimerDisplay();
-  }, 1000);
-  updateTimerDisplay();
-}
-function timerStop() {
-  clearInterval(timerInterval);
-  timerRunning = false;
-  document.getElementById('timerStartBtn').textContent = 'Start';
-  updateTimerDisplay();
-}
-function timerReset() {
-  timerStop();
-  timerSeconds = 0;
-  emomRound = 0;
-  updateTimerDisplay();
-}
-// Audio bip
-let audioCtx = null;
-function beep(freq, dur) {
-  try {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const o = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    o.connect(g); g.connect(audioCtx.destination);
-    o.type = 'sine'; o.frequency.value = freq;
-    g.gain.setValueAtTime(0.15, audioCtx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur/1000);
-    o.start(); o.stop(audioCtx.currentTime + dur/1000);
-  } catch(e) {}
-}
 
-// ============ TESTS BRAS GAUCHE ============
-function saveTest() {
-  const t = {
-    date: Date.now(),
-    week: DATA.currentWeek,
-    ta: parseFloat(document.getElementById('testTA').value) || null,
-    carry: parseFloat(document.getElementById('testCarry').value) || null,
-    goblet: parseFloat(document.getElementById('testGoblet').value) || null,
-    push: parseFloat(document.getElementById('testPush').value) || null,
-    rpe: parseFloat(document.getElementById('testRpe').value) || null
-  };
-  if (!t.ta && !t.carry && !t.goblet && !t.push && !t.rpe) {
-    toast("Au moins une valeur requise"); return;
-  }
-  DATA.tests.unshift(t);
-  saveData();
-  ['testTA','testCarry','testGoblet','testPush','testRpe'].forEach(id => document.getElementById(id).value = '');
-  renderTests();
-  drawChart();
-  toast("Test enregistré");
-}
-function renderTests() {
-  const wrap = document.getElementById('testHistory');
-  if (!DATA.tests.length) {
-    wrap.innerHTML = '<div class="empty">Aucun test encore.</div>';
-    return;
-  }
-  wrap.innerHTML = DATA.tests.slice(0, 20).map(t => {
-    const d = new Date(t.date);
-    const dStr = `S${t.week} · ${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')}`;
-    const parts = [];
-    if (t.ta != null) parts.push(`ΔTA ${t.ta}mmHg`);
-    if (t.carry != null) parts.push(`Carry ${t.carry}`);
-    if (t.goblet != null) parts.push(`Goblet ${t.goblet}r`);
-    if (t.push != null) parts.push(`Push ${t.push}r`);
-    if (t.rpe != null) parts.push(`RPE ${t.rpe}`);
-    return `
-      <div class="log-entry">
-        <div class="log-head">
-          <div class="log-date">${dStr}</div>
-        </div>
-        <div class="log-note">${parts.join(' · ')}</div>
-      </div>
-    `;
-  }).join('');
-}
-function drawChart() {
-  const canvas = document.getElementById('testChart');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const W = canvas.width = canvas.offsetWidth;
-  const H = canvas.height = 280;
-  ctx.clearRect(0, 0, W, H);
-
-  if (DATA.tests.length < 2) {
-    ctx.fillStyle = '#555';
-    ctx.font = 'italic 13px Fraunces, serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('Minimum 2 tests pour afficher le graphique', W/2, H/2);
-    return;
-  }
-
-  const tests = [...DATA.tests].reverse();
-  const metrics = [
-    { key: 'carry', color: '#c4ff3d', label: 'Carry' },
-    { key: 'goblet', color: '#6ee7b7', label: 'Goblet' },
-    { key: 'push', color: '#ffb84d', label: 'Push' }
-  ];
-
-  const padX = 40, padY = 30;
-  const plotW = W - padX * 2;
-  const plotH = H - padY * 2;
-
-  // Lignes de fond
-  ctx.strokeStyle = '#262626';
-  ctx.lineWidth = 1;
-  for (let i = 0; i <= 4; i++) {
-    const y = padY + (plotH / 4) * i;
-    ctx.beginPath();
-    ctx.moveTo(padX, y);
-    ctx.lineTo(W - padX, y);
-    ctx.stroke();
-  }
-
-  // Pour chaque métrique
-  metrics.forEach((m, idx) => {
-    const vals = tests.map(t => t[m.key]).filter(v => v != null);
-    if (vals.length < 2) return;
-    const max = Math.max(...vals);
-    const min = Math.min(...vals);
-    const range = max - min || 1;
-
-    ctx.strokeStyle = m.color;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    let first = true;
-    tests.forEach((t, i) => {
-      if (t[m.key] == null) return;
-      const x = padX + (plotW / Math.max(tests.length - 1, 1)) * i;
-      const y = padY + plotH - ((t[m.key] - min) / range) * plotH;
-      if (first) { ctx.moveTo(x, y); first = false; }
-      else ctx.lineTo(x, y);
-    });
-    ctx.stroke();
-
-    // Points
-    ctx.fillStyle = m.color;
-    tests.forEach((t, i) => {
-      if (t[m.key] == null) return;
-      const x = padX + (plotW / Math.max(tests.length - 1, 1)) * i;
-      const y = padY + plotH - ((t[m.key] - min) / range) * plotH;
-      ctx.beginPath();
-      ctx.arc(x, y, 3, 0, Math.PI * 2);
-      ctx.fill();
-    });
+    setsHTML+='<div class="ex-entry">'+
+      '<div class="ex-entry-name">'+ ex.name +'</div>'+
+      '<div class="ex-entry-prescribed">Prescrit : '+ ex.prescribed +'</div>'+
+      '<div class="sets-grid">'+
+      '<div class="hdr">Série</div><div class="hdr" style="text-align:left">Charge</div><div class="hdr">Reps</div><div class="hdr">Note</div>'+
+      gridRows+
+      '</div>'+
+      '</div>';
   });
 
-  // Légende
-  ctx.font = '10px JetBrains Mono, monospace';
-  ctx.textAlign = 'left';
-  metrics.forEach((m, i) => {
-    ctx.fillStyle = m.color;
-    ctx.fillRect(padX + i * 80, 8, 8, 8);
-    ctx.fillStyle = '#8a8a8a';
-    ctx.fillText(m.label, padX + i * 80 + 12, 16);
-  });
+  const seanceInfo=SEANCES[st.newSeance]||{};
+  wrap.innerHTML=
+    '<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-top:4px;">'+
+    '<button onclick="cancelNew(\''+(who==='T'?'T':'R')+'\')" style="background:none;border:1px solid #ddd;border-radius:8px;padding:7px 12px;font-size:13px;cursor:pointer;">← Retour</button>'+
+    '<div style="font-size:17px;font-weight:700;color:'+ col+'">Nouvelle séance</div>'+
+    '</div>'+
+    // Séance selector
+    '<div class="seance-select">'+
+    ['A','B','C'].map(s=>'<button class="sess-btn'+(st.newSeance===s?' sel-'+s:'')+ '" onclick="setNewSeance(\''+(who==='T'?'T':'R')+'\',\''+s+'\')">'+SEANCES[s].label+'</button>').join('') +
+    '</div>'+
+    // Date
+    '<div class="date-row"><label>Date</label><input type="date" id="newDate_'+(who==='T'?'T':'R')+'" value="'+ st.newDate +'" onchange="updateDate(\''+(who==='T'?'T':'R')+'\',this.value)"></div>'+
+    // Exercises
+    setsHTML+
+    // Global note
+    '<textarea class="note-area" id="globalNote_'+(who==='T'?'T':'R')+'" rows="2" placeholder="Notes générales sur la séance..."></textarea>'+
+    // Save
+    '<button class="save-btn save-'+(isT?'T':'R')+'" onclick="saveEntry(\''+(who==='T'?'T':'R')+'\')">'+
+    '✓ Enregistrer la séance</button>';
 }
 
-// ============ EXPORT/IMPORT ============
-function exportData() {
-  const blob = new Blob([JSON.stringify(DATA, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `protocole12_${new Date().toISOString().slice(0,10)}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
-  toast("Export téléchargé");
+function renderDetail(who,wrap,entryId){
+  const journal=getJournal(who);
+  const entry=journal.find(e=>e.id===entryId);
+  const isT=who==='T';
+  const col=isT?'#c05000':'#0050a0';
+  if(!entry){journalState[who].mode='list';journalState[who].detail=null;renderJournal(who);return;}
+  const seanceInfo=SEANCES[entry.seance]||{};
+
+  let exHTML='';
+  (entry.exercises||[]).forEach(ex=>{
+    const exInfo=EXERCISES.find(e=>e.id===ex.id)||{name:ex.id};
+    const rows=ex.sets.map((s,i)=>{
+      const hasData=s.kg||s.reps;
+      return '<div class="modal-set-row'+(hasData?' has-data':'')+'">'+
+        '<span style="font-size:13px;color:#aaa;font-weight:700;text-align:center;">'+(i+1)+'</span>'+
+        '<span style="font-size:14px;font-weight:700;">'+(s.kg?s.kg+' kg':'—')+'</span>'+
+        '<span style="font-size:14px;">'+(s.reps?s.reps+' reps':'—')+'</span>'+
+        '<span style="font-size:12px;color:#888;">'+(s.note||'')+'</span>'+
+        '</div>';
+    }).join('');
+    // Left arm rows for Thomas
+    const leftRows=(ex.setsLeft||[]).length>0?
+      '<div style="font-size:10px;color:#c00020;font-weight:700;margin:6px 0 3px;">⚕ Bras gauche</div>'+
+      ex.setsLeft.map((s,i)=>{
+        return '<div class="modal-set-row" style="background:#fff8f8;">'+
+          '<span style="font-size:13px;color:#c00020;font-weight:700;text-align:center;">'+(i+1)+'G</span>'+
+          '<span style="font-size:14px;font-weight:700;">'+(s.kg?s.kg+' kg':'—')+'</span>'+
+          '<span style="font-size:14px;">'+(s.reps?s.reps+' reps':'—')+'</span>'+
+          '<span></span></div>';
+      }).join('') : '';
+
+    exHTML+='<div class="modal-ex-block">'+
+      '<div class="modal-ex-name">'+ exInfo.name +'</div>'+
+      '<div style="display:grid;grid-template-columns:28px 1fr 1fr 1fr;gap:5px;margin-bottom:4px;">'+
+      '<span style="font-size:10px;color:#aaa;">S.</span><span style="font-size:10px;color:#aaa;">Charge</span><span style="font-size:10px;color:#aaa;">Reps</span><span style="font-size:10px;color:#aaa;">Note</span></div>'+
+      rows+ leftRows+
+      '</div>';
+  });
+  if(entry.note){
+    exHTML+='<div class="modal-note">'+ entry.note +'</div>';
+  }
+
+  wrap.innerHTML=
+    '<div class="modal-overlay" onclick="closeDetail(\''+(who==='T'?'T':'R')+'\')">'+
+    '<div class="modal-sheet" onclick="event.stopPropagation()">'+
+    '<div class="modal-handle"></div>'+
+    '<div class="modal-head">'+
+    '<h3 style="color:'+ (seanceInfo.color||col) +'">'+ (seanceInfo.label||entry.seance) +'</h3>'+
+    '<div style="display:flex;align-items:center;gap:8px;">'+
+    '<span style="font-size:12px;color:#888;">'+ formatDate(entry.date) +'</span>'+
+    '<button class="modal-close" onclick="closeDetail(\''+(who==='T'?'T':'R')+'\')">×</button>'+
+    '</div></div>'+
+    '<div class="modal-body">'+exHTML+'</div>'+
+    '</div></div>';
 }
-function importData() {
-  document.getElementById('importFile').click();
+
+// ── ACTIONS ────────────────────────────────────────────────
+function startNew(who){
+  journalState[who].mode='new';
+  journalState[who].newDate=today();
+  journalState[who].newSeance='A';
+  renderJournal(who);
+  document.getElementById('tabContent').scrollTop=0;
 }
-document.getElementById('importFile').addEventListener('change', (e) => {
-  const f = e.target.files[0];
-  if (!f) return;
-  const r = new FileReader();
-  r.onload = (ev) => {
-    try {
-      const d = JSON.parse(ev.target.result);
-      if (confirm("Remplacer toutes les données actuelles ?")) {
-        DATA = d;
-        saveData();
-        location.reload();
+function cancelNew(who){
+  journalState[who].mode='list';
+  renderJournal(who);
+}
+function setNewSeance(who,seance){
+  journalState[who].newSeance=seance;
+  renderJournal(who);
+}
+function updateDate(who,val){
+  journalState[who].newDate=val;
+}
+function saveEntry(who){
+  const st=journalState[who];
+  const isT=who==='T';
+  const exList=EXERCISES.filter(e=>e.seance===st.newSeance);
+  const hasLeft=isT;
+
+  const exercises=exList.map(ex=>{
+    const nSets=parseInt(ex.prescribed.split('×')[0])||3;
+    const sets=[];
+    for(let i=0;i<nSets;i++){
+      const kg=document.getElementById('kg_'+ex.id+'_'+i)?.value||'';
+      const reps=document.getElementById('reps_'+ex.id+'_'+i)?.value||'';
+      const note=document.getElementById('note_set_'+ex.id+'_'+i)?.value||'';
+      sets.push({kg,reps,note});
+    }
+    const setsLeft=[];
+    if(hasLeft && ['a_pec','a_epaules','a_lat','a_triceps','a_curl_r','c_rowing','c_curl','c_dips'].includes(ex.id)){
+      for(let i=0;i<nSets;i++){
+        const kg=document.getElementById('kg_L_'+ex.id+'_'+i)?.value||'';
+        const reps=document.getElementById('reps_L_'+ex.id+'_'+i)?.value||'';
+        setsLeft.push({kg,reps});
       }
-    } catch (e) { toast("Fichier invalide"); }
-  };
-  r.readAsText(f);
-});
-function resetData() {
-  if (!confirm("Effacer TOUTES les données ? Cette action est irréversible.")) return;
-  if (!confirm("Vraiment sûr ?")) return;
-  localStorage.removeItem(STORAGE_KEY);
-  location.reload();
+    }
+    return {id:ex.id,sets,setsLeft};
+  });
+
+  const note=document.getElementById('globalNote_'+who)?.value||'';
+  const entry={id:genId(),date:st.newDate,seance:st.newSeance,exercises,note};
+  addEntry(who,entry);
+  journalState[who].mode='list';
+  renderJournal(who);
+  showToast('Séance enregistrée ✓');
 }
-
-// ============ TOAST ============
-function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 1800);
+function showDetail(who,id){
+  journalState[who].mode='detail';
+  journalState[who].detail=id;
+  renderJournal(who);
 }
-
-// ============ INIT ============
-updateStreak();
-renderWeek();
-renderLogs();
-renderTests();
-
-window.addEventListener('resize', () => {
-  if (document.getElementById('tab-test').classList.contains('active')) drawChart();
-});
+function closeDetail(who){
+  journalState[who].mode='list';
+  journalState[who].detail=null;
+  renderJournal(who);
+}
+function confirmDelete(who,id){
+  if(confirm('Supprimer cette séance ?')){
+    deleteEntry(who,id);
+    renderJournal(who);
+    showToast('Séance supprimée');
+  }
+}
+function formatDate(d){
+  if(!d) return '';
+  try{
+    const dt=new Date(d+'T12:00:00');
+    return dt.toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});
+  }catch{return d;}
+}
+function showToast(msg){
+  const existing=document.querySelector('.toast');
+  if(existing) existing.remove();
+  if(toastTimer) clearTimeout(toastTimer);
+  const t=document.createElement('div');
+  t.className='toast'; t.textContent=msg;
+  document.body.appendChild(t);
+  toastTimer=setTimeout(()=>t.remove(),2200);
+}
 </script>
 </body>
 </html>
