@@ -4,8 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="theme-color" content="#0F0F0F">
+<style>
+  :root { --sat: env(safe-area-inset-top, 47px); }
+</style>
 <title>KB Program — Thomas & Renaud</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
@@ -23,7 +26,7 @@ body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;}
 /* ── SCROLL CONTAINER ── */
 .app{display:flex;flex-direction:column;height:100%;overflow:hidden;}
 .content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;
-  padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(80px + env(safe-area-inset-bottom,0px));}
+  padding:calc(16px + env(safe-area-inset-top,47px)) 16px calc(80px + env(safe-area-inset-bottom,0px));}
 
 /* ── BOTTOM NAV ── */
 .nav{
